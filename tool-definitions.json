@@ -1,0 +1,364 @@
+{
+  "project": "Access Granted NYC Transit Accessibility Companion",
+  "version": "2026-11-10",
+  "implementationStatus": "Planning submission. These tool contracts are defined; handlers, verified station records, hosting, and runtime integration still need implementation and testing.",
+  "functionDeclarations": [
+    {
+      "name": "search_stations",
+      "description": "Search only verified station records loaded in the pilot. Return distinct station or platform identifiers, station names, boroughs, and services. Ambiguous names can return multiple matches; no result does not establish that a station does not exist.",
+      "parametersJsonSchema": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "get_station_accessibility",
+      "description": "Retrieve one verified station record using an ID returned by station search. Include direction and entrance restrictions, official sources, and snapshot dates. The initial version does not check live elevator conditions.",
+      "parametersJsonSchema": {
+        "type": "object",
+        "properties": {
+          "stationId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          }
+        },
+        "required": [
+          "stationId"
+        ],
+        "additionalProperties": false
+      }
+    }
+  ],
+  "outputContracts": {
+    "search_stations": {
+      "type": "object",
+      "properties": {
+        "matches": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "stationId": {
+                "type": "string"
+              },
+              "stationName": {
+                "type": "string"
+              },
+              "borough": {
+                "type": "string"
+              },
+              "services": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": [
+              "stationId",
+              "stationName",
+              "borough",
+              "services"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "coverageNote": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "matches",
+        "coverageNote"
+      ],
+      "additionalProperties": false
+    },
+    "get_station_accessibility": {
+      "type": "object",
+      "properties": {
+        "record": {
+          "type": "object",
+          "properties": {
+            "station": {
+              "type": "object",
+              "properties": {
+                "stationId": {
+                  "type": "string"
+                },
+                "stationName": {
+                  "type": "string"
+                },
+                "borough": {
+                  "type": "string"
+                },
+                "services": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "required": [
+                "stationId",
+                "stationName",
+                "borough",
+                "services"
+              ],
+              "additionalProperties": false
+            },
+            "adaClassification": {
+              "type": "string",
+              "enum": [
+                "fully_accessible",
+                "partially_accessible",
+                "not_accessible",
+                "unknown"
+              ]
+            },
+            "directionNotes": {
+              "type": "string"
+            },
+            "entrances": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "entranceId": {
+                    "type": "string"
+                  },
+                  "locationDescription": {
+                    "type": "string"
+                  },
+                  "stepFree": {
+                    "type": "string",
+                    "enum": [
+                      "yes",
+                      "no",
+                      "unknown"
+                    ]
+                  },
+                  "entryAllowed": {
+                    "type": [
+                      "boolean",
+                      "null"
+                    ]
+                  },
+                  "exitAllowed": {
+                    "type": [
+                      "boolean",
+                      "null"
+                    ]
+                  },
+                  "services": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "directionNotes": {
+                    "type": "string"
+                  },
+                  "sources": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "url": {
+                          "type": "string"
+                        },
+                        "title": {
+                          "type": "string"
+                        },
+                        "sourceUpdatedAt": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "verifiedAt": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "url",
+                        "title",
+                        "sourceUpdatedAt",
+                        "verifiedAt"
+                      ],
+                      "additionalProperties": false
+                    }
+                  }
+                },
+                "required": [
+                  "entranceId",
+                  "locationDescription",
+                  "stepFree",
+                  "entryAllowed",
+                  "exitAllowed",
+                  "services",
+                  "directionNotes",
+                  "sources"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "platformNotes": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "equipmentNotes": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "currentElevatorStatus": {
+              "type": "string",
+              "enum": [
+                "not_checked"
+              ]
+            },
+            "officialStatusUrl": {
+              "type": "string",
+              "const": "https://www.mta.info/elevator-escalator-status"
+            },
+            "snapshotVerifiedAt": {
+              "type": "string"
+            },
+            "lastSuccessfulRefreshAt": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "refreshState": {
+              "type": "string",
+              "enum": [
+                "not_implemented",
+                "ok",
+                "failed_using_last_snapshot"
+              ]
+            },
+            "sources": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "url": {
+                    "type": "string"
+                  },
+                  "title": {
+                    "type": "string"
+                  },
+                  "sourceUpdatedAt": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "verifiedAt": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "url",
+                  "title",
+                  "sourceUpdatedAt",
+                  "verifiedAt"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "station",
+            "adaClassification",
+            "directionNotes",
+            "entrances",
+            "platformNotes",
+            "equipmentNotes",
+            "currentElevatorStatus",
+            "officialStatusUrl",
+            "snapshotVerifiedAt",
+            "lastSuccessfulRefreshAt",
+            "refreshState",
+            "sources"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "record"
+      ],
+      "additionalProperties": false
+    },
+    "error": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string",
+          "enum": [
+            "invalid_input",
+            "unknown_station",
+            "data_unavailable"
+          ]
+        },
+        "message": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "error",
+        "message"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "serverExecutionRules": [
+    "Validate tool inputs on the server before executing handlers. Search is limited to the verified pilot dataset.",
+    "Use official station, complex, and platform identifiers. Do not collapse different services with different accessibility into one unconditional claim.",
+    "Reject unknown station IDs. Do not treat user-provided JSON as authoritative station evidence.",
+    "Tools are read-only. Do not call external arbitrary URLs or execute user instructions.",
+    "Store timestamps as ISO 8601 strings. verifiedAt records a real source check, not the time a user loaded the page.",
+    "Return only official source URLs from vetted station records. Do not expose API credentials or personal data.",
+    "Daily reference refresh is a planned application process, not an AI tool. A successful refresh must be validated and saved durably before it replaces the prior snapshot.",
+    "Keep any demonstration outage outside the factual record and pass an explicit trusted dataMode to the AI. The initial UI may use snapshot or demonstration mode only.",
+    "No live-status or route-planning tool is declared for the initial MVP. Show current operating conditions as not checked.",
+    "Gemini Q&A output is validated separately against the response schema. Display provider failures as friendly application errors."
+  ],
+  "aiResponseSchema": {
+    "type": "object",
+    "properties": {
+      "answer": {
+        "type": "string",
+        "minLength": 1
+      },
+      "canConfirm": {
+        "type": "boolean"
+      },
+      "nextStep": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "required": [
+      "answer",
+      "canConfirm",
+      "nextStep"
+    ],
+    "additionalProperties": false
+  }
+}
