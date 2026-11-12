@@ -7,4 +7,6 @@
   <symbol id="question" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 8.5a2.6 2.6 0 0 1 5 1c0 2-2.5 2-2.5 4M12 17h.01"/></symbol>
   <symbol id="warning" viewBox="0 0 24 24"><path d="m12 3 10 18H2L12 3Z"/><path d="M12 9v5M12 17h.01"/></symbol>
   <symbol id="source" viewBox="0 0 24 24"><path d="M5 3h14v18H5zM8 7h8M8 11h8M8 15h5"/></symbol>
+  <symbol id="vision" viewBox="0 0 24 24"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></symbol>
+  <symbol id="hearing" viewBox="0 0 24 24"><path d="M5 10a7 7 0 0 1 14 0c0 4-4 4-5 7-1 4-6 4-7 0M9 10a3 3 0 0 1 6 0c0 2-3 2-3 4"/></symbol>
 </svg>

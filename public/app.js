@@ -10,6 +10,15 @@ function icon(name) {
   use.setAttribute('href', `/icons.svg#${name}`); svg.append(use); return svg;
 }
 for (const slot of document.querySelectorAll('[data-icon]')) slot.append(icon(slot.dataset.icon));
+function selectFeature(feature) {
+  const active = document.querySelector(`[data-feature="${feature}"]`);
+  const opening = active?.getAttribute('aria-expanded') !== 'true';
+  for (const button of document.querySelectorAll('[data-feature]')) button.setAttribute('aria-expanded', String(opening && button === active));
+  $('#step-free-panel').hidden = !opening || feature !== 'step-free';
+  $('#coming-soon-panel').hidden = !opening || feature === 'step-free';
+  if (opening && feature !== 'step-free') $('#coming-soon-title').textContent = {vision:'Vision support',hearing:'Hearing support',entrances:'Station entrances'}[feature];
+}
+for (const button of document.querySelectorAll('[data-feature]')) button.addEventListener('click', () => selectFeature(button.dataset.feature));
 function routes(services, limit = services.length) {
   const container = element('span', undefined, 'routes');
   for (const service of services.slice(0, limit)) { const badge = element('span', service, `route ${groupColors[service] || ''}`); badge.setAttribute('aria-label', `Line ${service}`); container.append(badge); }
@@ -104,7 +113,7 @@ function renderRecord() {
       ? 'Access depends on your service or direction.'
       : 'Use the documented entrance below.';
   const entrances=$('#entrance-content'); entrances.replaceChildren();
-  if (!record.entrances.length) entrances.append(element('p','None documented.'));
+  if (!record.entrances.length) entrances.append(element('p','No step-free entrance listed in our reference.'));
   else {
     const list=element('ul',undefined,'entrance-list');
     for (const entrance of record.entrances) list.append(element('li',entrance.locationDescription));
@@ -159,6 +168,8 @@ async function selectStation(stationId, focus=false) {
   const version=++state.selectVersion;
   $('#station-detail').setAttribute('aria-busy','true');
   resetConversation();
+  for (const button of document.querySelectorAll('[data-feature]')) button.setAttribute('aria-expanded','false');
+  $('#step-free-panel').hidden=true; $('#coming-soon-panel').hidden=true;
   state.record=null;
   state.mode='snapshot';renderMode();
   for(const details of document.querySelectorAll('.access-section'))details.open=false;
