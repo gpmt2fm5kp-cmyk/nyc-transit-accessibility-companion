@@ -1,7 +1,7 @@
 {
   "project": "Access Granted NYC Transit Accessibility Companion",
-  "version": "2026-11-10",
-  "implementationStatus": "Planning submission. These tool contracts are defined; handlers, verified station records, hosting, and runtime integration still need implementation and testing.",
+  "version": "2026-11-11",
+  "implementationStatus": "Read-only server handlers and frontend integration implemented and tested. The server invokes tools deterministically. Live Gemini calls and deployment await private GEMINI_API_KEY configuration and verification. Automatic refresh and live elevator status are not implemented.",
   "functionDeclarations": [
     {
       "name": "search_stations",
@@ -11,13 +11,23 @@
         "properties": {
           "query": {
             "type": "string",
-            "minLength": 1,
-            "maxLength": 120
+            "minLength": 0,
+            "maxLength": 120,
+            "default": ""
+          },
+          "borough": {
+            "type": "string",
+            "enum": [
+              "All",
+              "Manhattan",
+              "Bronx",
+              "Brooklyn",
+              "Queens"
+            ],
+            "default": "All"
           }
         },
-        "required": [
-          "query"
-        ],
+        "required": [],
         "additionalProperties": false
       }
     },
@@ -63,13 +73,23 @@
                 "items": {
                   "type": "string"
                 }
+              },
+              "classification": {
+                "type": "string",
+                "enum": [
+                  "fully_accessible",
+                  "partially_accessible",
+                  "not_accessible",
+                  "unknown"
+                ]
               }
             },
             "required": [
               "stationId",
               "stationName",
               "borough",
-              "services"
+              "services",
+              "classification"
             ],
             "additionalProperties": false
           }
@@ -281,6 +301,77 @@
                 ],
                 "additionalProperties": false
               }
+            },
+            "aliases": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "platforms": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "services": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "classification": {
+                    "type": "string",
+                    "enum": [
+                      "fully_accessible",
+                      "partially_accessible",
+                      "not_accessible",
+                      "unknown"
+                    ]
+                  },
+                  "directions": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "label": {
+                          "type": "string"
+                        },
+                        "stepFree": {
+                          "type": "string",
+                          "enum": [
+                            "yes",
+                            "no",
+                            "unknown"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "label",
+                        "stepFree"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "notes": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "name",
+                  "services",
+                  "classification",
+                  "directions",
+                  "notes"
+                ],
+                "additionalProperties": false
+              }
             }
           },
           "required": [
@@ -295,7 +386,9 @@
             "snapshotVerifiedAt",
             "lastSuccessfulRefreshAt",
             "refreshState",
-            "sources"
+            "sources",
+            "aliases",
+            "platforms"
           ],
           "additionalProperties": false
         }

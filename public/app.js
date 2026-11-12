@@ -1,0 +1,190 @@
+const $ = selector => document.querySelector(selector);
+const state = { stations: [], record: null, borough: 'All', query: '', history: [], mode: 'snapshot', busy: false, selectVersion: 0, askVersion: 0, aiConfigured: false };
+const classifications = { fully_accessible: 'Listed ADA accessible', partially_accessible: 'Some access is restricted', not_accessible: 'Not listed as ADA accessible', unknown: 'Accessibility not confirmed' };
+const groupColors = { '1':'red','2':'red','3':'red','4':'green','5':'green','6':'green','7':'purple',A:'blue',C:'blue',E:'blue',B:'orange',D:'orange',F:'orange',M:'orange',N:'yellow',Q:'yellow',R:'yellow',W:'yellow',G:'lime' };
+function element(tag, text, className) { const node = document.createElement(tag); if (text !== undefined) node.textContent = text; if (className) node.className = className; return node; }
+function routes(services, limit = services.length) {
+  const container = element('span', undefined, 'routes');
+  for (const service of services.slice(0, limit)) { const badge = element('span', service, `route ${groupColors[service] || ''}`); badge.setAttribute('aria-label', `Line ${service}`); container.append(badge); }
+  if (services.length > limit) container.append(element('span', `+${services.length-limit}`, 'route'));
+  return container;
+}
+function date(value) { return new Intl.DateTimeFormat('en-US', { month:'short', day:'numeric', year:'numeric', timeZone:'America/New_York' }).format(new Date(/^\d{4}-\d{2}-\d{2}$/.test(value) ? `${value}T12:00:00Z` : value)); }
+async function request(url, options) {
+  const response = await fetch(url, options);
+  let body;
+  try { body = await response.json(); } catch { throw new Error('The guide could not reach its server. Please refresh and try again.'); }
+  if (!response.ok) throw new Error(body.message || 'That request could not be completed. Please try again.');
+  return body;
+}
+function setThemeControl() {
+  const dark = document.documentElement.dataset.theme === 'dark';
+  $('#theme-toggle').setAttribute('aria-label', `Switch to ${dark ? 'light' : 'dark'} mode`);
+  $('#theme-toggle').setAttribute('title', `Switch to ${dark ? 'light' : 'dark'} mode`);
+  document.querySelector('meta[name="theme-color"]').content = dark ? '#080808' : '#f5f6f2';
+}
+$('#theme-toggle').addEventListener('click', () => {
+  const theme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+  document.documentElement.dataset.theme = theme;
+  try { localStorage.setItem('access-granted-theme', theme); } catch { /* Appearance still works if storage is disabled. */ }
+  setThemeControl();
+});
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+  let saved; try { saved = localStorage.getItem('access-granted-theme'); } catch { /* Use device preference. */ }
+  if (!saved) { document.documentElement.dataset.theme = event.matches ? 'dark' : 'light'; setThemeControl(); }
+});
+setThemeControl();
+const about = $('#about-dialog');
+$('#about-button').addEventListener('click', () => about.showModal());
+$('#close-about').addEventListener('click', () => about.close());
+about.addEventListener('click', event => { if (event.target === about) { const bounds = about.getBoundingClientRect(); if (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom) about.close(); } });
+
+function renderStations() {
+  $('#station-list').replaceChildren();
+  for (const station of state.stations) {
+    const button = element('button', undefined, 'station-button');
+    button.type = 'button';
+    button.dataset.stationId = station.stationId;
+    button.setAttribute('aria-current', String(state.record?.station.stationId === station.stationId));
+    button.setAttribute('aria-label', `${station.stationName}, lines ${station.services.join(', ')}, ${station.borough}. ${classifications[station.classification]}.`);
+    const sub = element('span', undefined, 'station-subline'); sub.append(routes(station.services, 4), element('span', station.borough));
+    button.append(element('strong', station.stationName), sub);
+    button.addEventListener('click', () => selectStation(station.stationId, true));
+    $('#station-list').append(button);
+  }
+  $('#empty-state').hidden = state.stations.length > 0;
+  $('#result-count').textContent = `${state.stations.length} ${state.stations.length === 1 ? 'station' : 'stations'}${state.borough !== 'All' ? ` in ${state.borough}` : ' in this pilot'}`;
+}
+let searchVersion = 0;
+async function searchStations() {
+  const version = ++searchVersion;
+  try {
+    const result = await request(`/api/stations?${new URLSearchParams({ query: state.query, borough: state.borough })}`);
+    if (version !== searchVersion) return;
+    state.stations = result.matches;
+    renderStations();
+    $('#load-error').hidden = true;
+  } catch(error) { if (version === searchVersion) { $('#load-error').textContent = error.message; $('#load-error').hidden = false; } }
+}
+let searchTimer;
+$('#search').addEventListener('input', event => { state.query = event.target.value; clearTimeout(searchTimer); searchTimer = setTimeout(searchStations, 180); });
+$('#search-form').addEventListener('submit', event => { event.preventDefault(); clearTimeout(searchTimer); state.query = $('#search').value; searchStations(); });
+for (const button of document.querySelectorAll('[data-borough]')) button.addEventListener('click', () => {
+  state.borough = button.dataset.borough;
+  for (const item of document.querySelectorAll('[data-borough]')) { const selected = item === button; item.classList.toggle('active', selected); item.setAttribute('aria-pressed', String(selected)); }
+  searchStations();
+});
+$('#reset-search').addEventListener('click', () => { $('#search').value=''; state.query=''; state.borough='All'; for (const item of document.querySelectorAll('[data-borough]')) { const selected=item.dataset.borough==='All'; item.classList.toggle('active',selected); item.setAttribute('aria-pressed',String(selected)); } searchStations(); });
+function resetConversation() {
+  state.askVersion++;
+  state.history=[]; state.busy=false;
+  $('#conversation').replaceChildren(); $('#question').value=''; $('#usage').hidden=true;
+  $('#ask-submit').disabled=false; $('#ask-submit').textContent='Ask';
+}
+function renderRecord() {
+  const record=state.record;
+  $('#station-name').textContent=record.station.stationName;
+  $('#station-routes').replaceChildren(routes(record.station.services));
+  $('#station-borough').textContent=record.station.borough;
+  $('#access-label').textContent=classifications[record.adaClassification];
+  $('#access-description').textContent=record.adaClassification==='not_accessible'
+    ? 'The checked MTA station record does not list a step-free accessible station here. Ask MTA about suitable alternatives.'
+    : record.adaClassification==='partially_accessible'
+      ? 'Some services or directions have different access. Open the platform details before deciding what applies to your trip.'
+      : 'The checked MTA record lists accessible platforms. Use the documented entrance and check current equipment status before travel.';
+  const entrances=$('#entrance-content'); entrances.replaceChildren();
+  if (!record.entrances.length) entrances.append(element('p','No step-free entrance is documented in this pilot record. We cannot recommend an entrance here.'));
+  else {
+    const list=element('ul');
+    for (const entrance of record.entrances) list.append(element('li',entrance.locationDescription));
+    entrances.append(list,element('p','These are reference locations, not confirmation that an entrance or elevator is open now. The record does not establish entry/exit rules or opening hours. Match your service and direction against the MTA reference.'));
+  }
+  const platformContent=$('#platform-content'); platformContent.replaceChildren(element('p',record.directionNotes));
+  for (const platform of record.platforms) {
+    const section=element('section',undefined,'platform-record');
+    section.append(element('h4',`${platform.name} · ${platform.services.join(' / ')}`));
+    section.append(element('p',classifications[platform.classification]));
+    for (const direction of platform.directions) {
+      const row=element('p',undefined,'direction-row');
+      row.append(element('span',`${direction.label}: `,'direction-label'),document.createTextNode({yes:'listed accessible in the reference',no:'not listed accessible in the reference',unknown:'access not confirmed'}[direction.stepFree]));
+      section.append(row);
+    }
+    if(platform.notes) section.append(element('p',platform.notes));
+    platformContent.append(section);
+  }
+  const sourceContent=$('#source-content'); sourceContent.replaceChildren();
+  for (const source of record.sources) {
+    const link=element('a',`${source.title} ↗`);link.href=source.url;link.target='_blank';link.rel='noopener noreferrer';
+    const section=element('div',undefined,'platform-record');
+    section.append(link,element('p',`Checked ${date(source.verifiedAt)}. Source updated ${source.sourceUpdatedAt ? date(source.sourceUpdatedAt) : 'date not supplied'}.`,'source-date'));sourceContent.append(section);
+  }
+  sourceContent.append(element('p','This snapshot changes when we review and redeploy it. Automatic daily refresh is not implemented. Verification is not a live equipment check.'));
+  $('#snapshot-caption').textContent=`Reference checked ${date(record.snapshotVerifiedAt)} · No live elevator feed · No automatic refresh`;
+  for (const button of document.querySelectorAll('.station-button')) button.setAttribute('aria-current',String(button.dataset.stationId===record.station.stationId));
+  $('#station-detail').setAttribute('aria-busy','false');
+}
+async function selectStation(stationId, focus=false) {
+  const version=++state.selectVersion;
+  $('#station-detail').setAttribute('aria-busy','true');
+  resetConversation();
+  state.record=null;
+  state.mode='snapshot';renderMode();
+  for(const details of document.querySelectorAll('.access-section'))details.open=false;
+  try {
+    const {record}=await request(`/api/stations/${encodeURIComponent(stationId)}`);
+    if(version!==state.selectVersion)return;
+    state.record=record;renderRecord();
+    if(focus){$('#station-name').tabIndex=-1;$('#station-name').focus({preventScroll:true});if(matchMedia('(max-width:760px)').matches)$('#station-detail').scrollIntoView({behavior:'smooth',block:'start'});}
+    const url=new URL(location.href);url.searchParams.set('station',stationId);history.replaceState(null,'',url);
+    $('#load-error').hidden=true;
+  }catch(error){if(version===state.selectVersion){$('#station-detail').setAttribute('aria-busy','false');$('#load-error').textContent=error.message;$('#load-error').hidden=false;}}
+}
+function renderMode(){
+  const demo=state.mode==='demonstration';
+  $('#demo-panel').hidden=!demo;$('#question-mode').hidden=!demo;
+  $('#demo-toggle').setAttribute('aria-pressed',String(demo));
+  $('#demo-toggle').firstChild.textContent=demo?'Exit sample outage ':'Try a sample outage ';
+}
+async function toggleDemo(){
+  if(!state.record)return;
+  if(state.mode==='demonstration'){state.mode='snapshot';resetConversation();renderMode();return;}
+  const station=state.record.station.stationId;
+  try{
+    const demo=await request(`/api/stations/${encodeURIComponent(station)}/demo`);
+    if(state.record.station.stationId!==station)return;
+    state.mode='demonstration';resetConversation();
+    $('#demo-scenario').textContent=demo.scenario;$('#demo-next').textContent=demo.nextStep;renderMode();
+    $('#demo-panel').scrollIntoView({behavior:'smooth',block:'nearest'});
+  }catch(error){$('#load-error').textContent=error.message;$('#load-error').hidden=false;}
+}
+$('#demo-toggle').addEventListener('click',toggleDemo);
+$('#exit-demo').addEventListener('click',()=>{state.mode='snapshot';resetConversation();renderMode();});
+function message(role,text,error=false){const box=element('div',undefined,`message ${role}${error?' error':''}`);box.append(element('strong',role==='user'?'Your question':error?'Guide unavailable':'Station guide'),element('p',text));$('#conversation').append(box);return box;}
+$('#ask-form').addEventListener('submit',async event=>{
+  event.preventDefault();if(state.busy||!state.record)return;
+  const question=$('#question').value.trim();if(!question)return;
+  const version=++state.askVersion;const stationId=state.record.station.stationId;const mode=state.mode;
+  state.busy=true;$('#ask-submit').disabled=true;$('#ask-submit').textContent='…';
+  message('user',question);$('#question').value='';
+  const pending=message('assistant','Reading the station reference…');pending.setAttribute('role','status');
+  try{
+    const result=await request('/api/ask',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({stationId,question,dataMode:mode,history:state.history.slice(-6)})});
+    if(version!==state.askVersion)return;
+    pending.remove();
+    const box=message('assistant',result.answer);
+    box.append(element('p',`Next step: ${result.nextStep}`,'next-step'));
+    box.append(element('p',`${result.dataMode==='demonstration'?'Sample outage for demonstration. ':''}${result.canConfirm?'Supported by the dated reference.':'This answer cannot confirm the requested conditions.'} Current elevator status has not been checked.`,'answer-note'));
+    state.history.push({role:'user',text:question},{role:'assistant',text:`${result.answer} ${result.nextStep}`});state.history=state.history.slice(-6);
+    if(Number.isFinite(result.usage?.totalTokens)){$('#usage').textContent=`${result.usage.totalTokens.toLocaleString()} tokens used for this response`;$('#usage').hidden=false;}
+  }catch(error){if(version!==state.askVersion)return;pending.remove();message('assistant',error.message,true);}
+  finally{if(version===state.askVersion){state.busy=false;$('#ask-submit').disabled=false;$('#ask-submit').textContent='Ask';$('#question').focus({preventScroll:true});$('#conversation').scrollTop=$('#conversation').scrollHeight;}}
+});
+for(const chip of document.querySelectorAll('[data-question]'))chip.addEventListener('click',()=>{$('#question').value=chip.dataset.question;$('#question').focus();});
+async function initialize(){
+  await searchStations();
+  const requested=new URLSearchParams(location.search).get('station');
+  const first=state.stations.find(s=>s.stationId===requested)||state.stations[0];
+  if(first)await selectStation(first.stationId);
+  try{const health=await request('/api/health');state.aiConfigured=health.aiConfigured;$('#ai-status').textContent=health.aiConfigured?'Gemini guide connected':'AI guide not connected yet. Station cards are available.';$('#ai-status').classList.toggle('connected',health.aiConfigured);}catch{$('#ai-status').textContent='Guide connection unavailable. Try refreshing.';}
+}
+initialize();

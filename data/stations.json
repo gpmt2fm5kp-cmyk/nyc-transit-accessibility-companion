@@ -1,0 +1,1394 @@
+{
+  "verifiedAt": "2026-11-12T00:16:56.399774+00:00",
+  "sourceUpdatedAt": "2026-11-11T05:20:07+00:00",
+  "coverageNote": "12 selected station locations and complexes across Manhattan, the Bronx, Brooklyn and Queens. Service lists are reference data, not today\u2019s service schedule.",
+  "records": [
+    {
+      "station": {
+        "stationId": "471",
+        "stationName": "34 St\u2013Hudson Yards",
+        "borough": "Manhattan",
+        "services": [
+          "7"
+        ]
+      },
+      "aliases": [
+        "34 St-Hudson Yards"
+      ],
+      "adaClassification": "fully_accessible",
+      "directionNotes": "Read each service and direction separately. A station listing does not confirm that equipment is operating.",
+      "entrances": [
+        {
+          "entranceId": "471-reference-1",
+          "locationDescription": "Hudson Yards: south side of 34th Street, between 10th Avenue and Hudson Boulevard East.",
+          "stepFree": "yes",
+          "entryAllowed": null,
+          "exitAllowed": null,
+          "services": [],
+          "directionNotes": "Match the relevant service and direction using the official entrance reference; opening hours and equipment operation are not checked.",
+          "sources": [
+            {
+              "url": "https://www.mta.info/accessibility/stations",
+              "title": "MTA accessible-station entrance reference",
+              "sourceUpdatedAt": "2026-10-12",
+              "verifiedAt": "2026-11-12T00:16:56.399774+00:00"
+            }
+          ]
+        }
+      ],
+      "platforms": [
+        {
+          "id": "726",
+          "name": "34 St-Hudson Yards",
+          "services": [
+            "7"
+          ],
+          "classification": "fully_accessible",
+          "directions": [
+            {
+              "label": "Last Stop",
+              "stepFree": "yes"
+            },
+            {
+              "label": "Queens",
+              "stepFree": "yes"
+            }
+          ],
+          "notes": ""
+        }
+      ],
+      "platformNotes": [
+        "34 St-Hudson Yards (7): fully accessible"
+      ],
+      "equipmentNotes": [
+        "Current elevator status has not been checked."
+      ],
+      "currentElevatorStatus": "not_checked",
+      "officialStatusUrl": "https://www.mta.info/elevator-escalator-status",
+      "snapshotVerifiedAt": "2026-11-12T00:16:56.399774+00:00",
+      "lastSuccessfulRefreshAt": null,
+      "refreshState": "not_implemented",
+      "sources": [
+        {
+          "url": "https://data.ny.gov/Transportation/MTA-Subway-Stations/39hk-dx4f",
+          "title": "MTA Subway Stations \u00b7 NY Open Data",
+          "sourceUpdatedAt": "2026-11-11T05:20:07+00:00",
+          "verifiedAt": "2026-11-12T00:16:56.399774+00:00"
+        },
+        {
+          "url": "https://www.mta.info/accessibility/stations",
+          "title": "MTA accessible-station entrance reference",
+          "sourceUpdatedAt": "2026-10-12",
+          "verifiedAt": "2026-11-12T00:16:56.399774+00:00"
+        }
+      ]
+    },
+    {
+      "station": {
+        "stationId": "151",
+        "stationName": "145 St \u00b7 A / C / B / D",
+        "borough": "Manhattan",
+        "services": [
+          "A",
+          "C",
+          "B",
+          "D"
+        ]
+      },
+      "aliases": [
+        "145 St",
+        "145 St"
+      ],
+      "adaClassification": "not_accessible",
+      "directionNotes": "Read each service and direction separately. A station listing does not confirm that equipment is operating.",
+      "entrances": [],
+      "platforms": [
+        {
+          "id": "A12",
+          "name": "145 St",
+          "services": [
+            "A",
+            "C"
+          ],
+          "classification": "not_accessible",
+          "directions": [
+            {
+              "label": "Uptown",
+              "stepFree": "no"
+            },
+            {
+              "label": "Downtown",
+              "stepFree": "no"
+            }
+          ],
+          "notes": ""
+        },
+        {
+          "id": "D13",
+          "name": "145 St",
+          "services": [
+            "B",
+            "D"
+          ],
+          "classification": "not_accessible",
+          "directions": [
+            {
+              "label": "Uptown",
+              "stepFree": "no"
+            },
+            {
+              "label": "Downtown",
+              "stepFree": "no"
+            }
+          ],
+          "notes": ""
+        }
+      ],
+      "platformNotes": [
+        "145 St (A/C): not accessible",
+        "145 St (B/D): not accessible"
+      ],
+      "equipmentNotes": [
+        "Current elevator status has not been checked."
+      ],
+      "currentElevatorStatus": "not_checked",
+      "officialStatusUrl": "https://www.mta.info/elevator-escalator-status",
+      "snapshotVerifiedAt": "2026-11-12T00:16:56.399774+00:00",
+      "lastSuccessfulRefreshAt": null,
+      "refreshState": "not_implemented",
+      "sources": [
+        {
+          "url": "https://data.ny.gov/Transportation/MTA-Subway-Stations/39hk-dx4f",
+          "title": "MTA Subway Stations \u00b7 NY Open Data",
+          "sourceUpdatedAt": "2026-11-11T05:20:07+00:00",
+          "verifiedAt": "2026-11-12T00:16:56.399774+00:00"
+        }
+      ]
+    },
+    {
+      "station": {
+        "stationId": "611",
+        "stationName": "Times Sq\u201342 St",
+        "borough": "Manhattan",
+        "services": [
+          "N",
+          "Q",
+          "R",
+          "W",
+          "A",
+          "C",
+          "E",
+          "1",
+          "2",
+          "3",
+          "7",
+          "S"
+        ]
+      },
+      "aliases": [
+        "Times Sq-42 St",
+        "42 St-Port Authority Bus Terminal",
+        "Times Sq-42 St",
+        "Times Sq-42 St",
+        "Times Sq-42 St"
+      ],
+      "adaClassification": "fully_accessible",
+      "directionNotes": "The passage to Port Authority contains ramps that do not meet ADA guidelines. Do not assume an accessible transfer between the two stations.",
+      "entrances": [
+        {
+          "entranceId": "611-reference-1",
+          "locationDescription": "Southeast corner, 42nd Street / 7th Avenue.",
+          "stepFree": "yes",
+          "entryAllowed": null,
+          "exitAllowed": null,
+          "services": [],
+          "directionNotes": "Match the relevant service and direction using the official entrance reference; opening hours and equipment operation are not checked.",
+          "sources": [
+            {
+              "url": "https://www.mta.info/accessibility/stations",
+              "title": "MTA accessible-station entrance reference",
+              "sourceUpdatedAt": "2026-10-12",
+              "verifiedAt": "2026-11-12T00:16:56.399774+00:00"
+            }
+          ]
+        },
+        {
+          "entranceId": "611-reference-2",
+          "locationDescription": "Broadway Plaza, between 42nd and 43rd streets.",
+          "stepFree": "yes",
+          "entryAllowed": null,
+          "exitAllowed": null,
+          "services": [],
+          "directionNotes": "Match the relevant service and direction using the official entrance reference; opening hours and equipment operation are not checked.",
+          "sources": [
+            {
+              "url": "https://www.mta.info/accessibility/stations",
+              "title": "MTA accessible-station entrance reference",
+              "sourceUpdatedAt": "2026-10-12",
+              "verifiedAt": "2026-11-12T00:16:56.399774+00:00"
+            }
+          ]
+        }
+      ],
+      "platforms": [
+        {
+          "id": "R16",
+          "name": "Times Sq-42 St",
+          "services": [
+            "N",
+            "Q",
+            "R",
+            "W"
+          ],
+          "classification": "fully_accessible",
+          "directions": [
+            {
+              "label": "Uptown",
+              "stepFree": "yes"
+            },
+            {
+              "label": "Downtown",
+              "stepFree": "yes"
+            }
+          ],
+          "notes": ""
+        },
+        {
+          "id": "A27",
+          "name": "42 St-Port Authority Bus Terminal",
+          "services": [
+            "A",
+            "C",
+            "E"
+          ],
+          "classification": "fully_accessible",
+          "directions": [
+            {
+              "label": "Uptown",
+              "stepFree": "yes"
+            },
+            {
+              "label": "Downtown",
+              "stepFree": "yes"
+            }
+          ],
+          "notes": ""
+        },
+        {
+          "id": "127",
+          "name": "Times Sq-42 St",
+          "services": [
+            "1",
+            "2",
+            "3"
+          ],
+          "classification": "fully_accessible",
+          "directions": [
+            {
+              "label": "Uptown",
+              "stepFree": "yes"
+            },
+            {
+              "label": "Downtown",
+              "stepFree": "yes"
+            }
+          ],
+          "notes": ""
+        },
+        {
+          "id": "725",
+          "name": "Times Sq-42 St",
+          "services": [
+            "7"
+          ],
+          "classification": "fully_accessible",
+          "directions": [
+            {
+              "label": "Queens",
+              "stepFree": "yes"
+            },
+            {
+              "label": "Hudson Yards",
+              "stepFree": "yes"
+            }
+          ],
+          "notes": ""
+        },
+        {
+          "id": "902",
+          "name": "Times Sq-42 St",
+          "services": [
+            "S"
+          ],
+          "classification": "fully_accessible",
+          "directions": [
+            {
+              "label": "Last Stop",
+              "stepFree": "yes"
+            },
+            {
+              "label": "Grand Central",
+              "stepFree": "yes"
+            }
+          ],
+          "notes": ""
+        }
+      ],
+      "platformNotes": [
+        "Times Sq-42 St (N/Q/R/W): fully accessible",
+        "42 St-Port Authority Bus Terminal (A/C/E): fully accessible",
+        "Times Sq-42 St (1/2/3): fully accessible",
+        "Times Sq-42 St (7): fully accessible",
+        "Times Sq-42 St (S): fully accessible"
+      ],
+      "equipmentNotes": [
+        "Current elevator status has not been checked."
+      ],
+      "currentElevatorStatus": "not_checked",
+      "officialStatusUrl": "https://www.mta.info/elevator-escalator-status",
+      "snapshotVerifiedAt": "2026-11-12T00:16:56.399774+00:00",
+      "lastSuccessfulRefreshAt": null,
+      "refreshState": "not_implemented",
+      "sources": [
+        {
+          "url": "https://data.ny.gov/Transportation/MTA-Subway-Stations/39hk-dx4f",
+          "title": "MTA Subway Stations \u00b7 NY Open Data",
+          "sourceUpdatedAt": "2026-11-11T05:20:07+00:00",
+          "verifiedAt": "2026-11-12T00:16:56.399774+00:00"
+        },
+        {
+          "url": "https://www.mta.info/accessibility/stations",
+          "title": "MTA accessible-station entrance reference",
+          "sourceUpdatedAt": "2026-10-12",
+          "verifiedAt": "2026-11-12T00:16:56.399774+00:00"
+        }
+      ]
+    },
+    {
+      "station": {
+        "stationId": "427",
+        "stationName": "West Farms Sq\u2013E Tremont Av",
+        "borough": "Bronx",
+        "services": [
+          "2",
+          "5"
+        ]
+      },
+      "aliases": [
+        "West Farms Sq-E Tremont Av"
+      ],
+      "adaClassification": "not_accessible",
+      "directionNotes": "Read each service and direction separately. A station listing does not confirm that equipment is operating.",
+      "entrances": [],
+      "platforms": [
+        {
+          "id": "214",
+          "name": "West Farms Sq-E Tremont Av",
+          "services": [
+            "2",
+            "5"
+          ],
+          "classification": "not_accessible",
+          "directions": [
+            {
+              "label": "Northbound",
+              "stepFree": "no"
+            },
+            {
+              "label": "Manhattan",
+              "stepFree": "no"
+            }
+          ],
+          "notes": ""
+        }
+      ],
+      "platformNotes": [
+        "West Farms Sq-E Tremont Av (2/5): not accessible"
+      ],
+      "equipmentNotes": [
+        "Current elevator status has not been checked."
+      ],
+      "currentElevatorStatus": "not_checked",
+      "officialStatusUrl": "https://www.mta.info/elevator-escalator-status",
+      "snapshotVerifiedAt": "2026-11-12T00:16:56.399774+00:00",
+      "lastSuccessfulRefreshAt": null,
+      "refreshState": "not_implemented",
+      "sources": [
+        {
+          "url": "https://data.ny.gov/Transportation/MTA-Subway-Stations/39hk-dx4f",
+          "title": "MTA Subway Stations \u00b7 NY Open Data",
+          "sourceUpdatedAt": "2026-11-11T05:20:07+00:00",
+          "verifiedAt": "2026-11-12T00:16:56.399774+00:00"
+        }
+      ]
+    },
+    {
+      "station": {
+        "stationId": "603",
+        "stationName": "149 St\u2013Hostos",
+        "borough": "Bronx",
+        "services": [
+          "4",
+          "2",
+          "5"
+        ]
+      },
+      "aliases": [
+        "149 St-Hostos",
+        "149 St-Hostos",
+        "149 St Grand Concourse"
+      ],
+      "adaClassification": "fully_accessible",
+      "directionNotes": "Read each service and direction separately. A station listing does not confirm that equipment is operating.",
+      "entrances": [
+        {
+          "entranceId": "603-reference-1",
+          "locationDescription": "Southwest corner, Grand Concourse / East 149th Street.",
+          "stepFree": "yes",
+          "entryAllowed": null,
+          "exitAllowed": null,
+          "services": [],
+          "directionNotes": "Match the relevant service and direction using the official entrance reference; opening hours and equipment operation are not checked.",
+          "sources": [
+            {
+              "url": "https://www.mta.info/accessibility/stations",
+              "title": "MTA accessible-station entrance reference",
+              "sourceUpdatedAt": "2026-10-12",
+              "verifiedAt": "2026-11-12T00:16:56.399774+00:00"
+            }
+          ]
+        }
+      ],
+      "platforms": [
+        {
+          "id": "415",
+          "name": "149 St-Hostos",
+          "services": [
+            "4"
+          ],
+          "classification": "fully_accessible",
+          "directions": [
+            {
+              "label": "Northbound",
+              "stepFree": "yes"
+            },
+            {
+              "label": "Manhattan",
+              "stepFree": "yes"
+            }
+          ],
+          "notes": ""
+        },
+        {
+          "id": "222",
+          "name": "149 St-Hostos",
+          "services": [
+            "2",
+            "5"
+          ],
+          "classification": "fully_accessible",
+          "directions": [
+            {
+              "label": "Northbound",
+              "stepFree": "yes"
+            },
+            {
+              "label": "Manhattan",
+              "stepFree": "yes"
+            }
+          ],
+          "notes": ""
+        }
+      ],
+      "platformNotes": [
+        "149 St-Hostos (4): fully accessible",
+        "149 St-Hostos (2/5): fully accessible"
+      ],
+      "equipmentNotes": [
+        "Current elevator status has not been checked."
+      ],
+      "currentElevatorStatus": "not_checked",
+      "officialStatusUrl": "https://www.mta.info/elevator-escalator-status",
+      "snapshotVerifiedAt": "2026-11-12T00:16:56.399774+00:00",
+      "lastSuccessfulRefreshAt": null,
+      "refreshState": "not_implemented",
+      "sources": [
+        {
+          "url": "https://data.ny.gov/Transportation/MTA-Subway-Stations/39hk-dx4f",
+          "title": "MTA Subway Stations \u00b7 NY Open Data",
+          "sourceUpdatedAt": "2026-11-11T05:20:07+00:00",
+          "verifiedAt": "2026-11-12T00:16:56.399774+00:00"
+        },
+        {
+          "url": "https://www.mta.info/accessibility/stations",
+          "title": "MTA accessible-station entrance reference",
+          "sourceUpdatedAt": "2026-10-12",
+          "verifiedAt": "2026-11-12T00:16:56.399774+00:00"
+        }
+      ]
+    },
+    {
+      "station": {
+        "stationId": "604",
+        "stationName": "161 St\u2013Yankee Stadium",
+        "borough": "Bronx",
+        "services": [
+          "B",
+          "D",
+          "4"
+        ]
+      },
+      "aliases": [
+        "161 St-Yankee Stadium",
+        "161 St-Yankee Stadium"
+      ],
+      "adaClassification": "fully_accessible",
+      "directionNotes": "Read each service and direction separately. A station listing does not confirm that equipment is operating.",
+      "entrances": [
+        {
+          "entranceId": "604-reference-1",
+          "locationDescription": "Northeast corner, 161st Street / River Avenue.",
+          "stepFree": "yes",
+          "entryAllowed": null,
+          "exitAllowed": null,
+          "services": [],
+          "directionNotes": "Match the relevant service and direction using the official entrance reference; opening hours and equipment operation are not checked.",
+          "sources": [
+            {
+              "url": "https://www.mta.info/accessibility/stations",
+              "title": "MTA accessible-station entrance reference",
+              "sourceUpdatedAt": "2026-10-12",
+              "verifiedAt": "2026-11-12T00:16:56.399774+00:00"
+            }
+          ]
+        }
+      ],
+      "platforms": [
+        {
+          "id": "D11",
+          "name": "161 St-Yankee Stadium",
+          "services": [
+            "B",
+            "D"
+          ],
+          "classification": "fully_accessible",
+          "directions": [
+            {
+              "label": "Northbound",
+              "stepFree": "yes"
+            },
+            {
+              "label": "Manhattan",
+              "stepFree": "yes"
+            }
+          ],
+          "notes": ""
+        },
+        {
+          "id": "414",
+          "name": "161 St-Yankee Stadium",
+          "services": [
+            "4"
+          ],
+          "classification": "fully_accessible",
+          "directions": [
+            {
+              "label": "Northbound",
+              "stepFree": "yes"
+            },
+            {
+              "label": "Manhattan",
+              "stepFree": "yes"
+            }
+          ],
+          "notes": ""
+        }
+      ],
+      "platformNotes": [
+        "161 St-Yankee Stadium (B/D): fully accessible",
+        "161 St-Yankee Stadium (4): fully accessible"
+      ],
+      "equipmentNotes": [
+        "Current elevator status has not been checked."
+      ],
+      "currentElevatorStatus": "not_checked",
+      "officialStatusUrl": "https://www.mta.info/elevator-escalator-status",
+      "snapshotVerifiedAt": "2026-11-12T00:16:56.399774+00:00",
+      "lastSuccessfulRefreshAt": null,
+      "refreshState": "not_implemented",
+      "sources": [
+        {
+          "url": "https://data.ny.gov/Transportation/MTA-Subway-Stations/39hk-dx4f",
+          "title": "MTA Subway Stations \u00b7 NY Open Data",
+          "sourceUpdatedAt": "2026-11-11T05:20:07+00:00",
+          "verifiedAt": "2026-11-12T00:16:56.399774+00:00"
+        },
+        {
+          "url": "https://www.mta.info/accessibility/stations",
+          "title": "MTA accessible-station entrance reference",
+          "sourceUpdatedAt": "2026-10-12",
+          "verifiedAt": "2026-11-12T00:16:56.399774+00:00"
+        }
+      ]
+    },
+    {
+      "station": {
+        "stationId": "617",
+        "stationName": "Atlantic Av\u2013Barclays Ctr",
+        "borough": "Brooklyn",
+        "services": [
+          "D",
+          "N",
+          "R",
+          "B",
+          "Q",
+          "2",
+          "3",
+          "4",
+          "5"
+        ]
+      },
+      "aliases": [
+        "Atlantic Av-Barclays Ctr",
+        "Atlantic Av-Barclays Ctr",
+        "Atlantic Av-Barclays Ctr"
+      ],
+      "adaClassification": "fully_accessible",
+      "directionNotes": "Read each service and direction separately. A station listing does not confirm that equipment is operating.",
+      "entrances": [
+        {
+          "entranceId": "617-reference-1",
+          "locationDescription": "Southeast corner, Pacific Street / 4th Avenue.",
+          "stepFree": "yes",
+          "entryAllowed": null,
+          "exitAllowed": null,
+          "services": [],
+          "directionNotes": "Match the relevant service and direction using the official entrance reference; opening hours and equipment operation are not checked.",
+          "sources": [
+            {
+              "url": "https://www.mta.info/accessibility/stations",
+              "title": "MTA accessible-station entrance reference",
+              "sourceUpdatedAt": "2026-10-12",
+              "verifiedAt": "2026-11-12T00:16:56.399774+00:00"
+            }
+          ]
+        },
+        {
+          "entranceId": "617-reference-2",
+          "locationDescription": "Hanson Place / Flatbush Avenue.",
+          "stepFree": "yes",
+          "entryAllowed": null,
+          "exitAllowed": null,
+          "services": [],
+          "directionNotes": "Match the relevant service and direction using the official entrance reference; opening hours and equipment operation are not checked.",
+          "sources": [
+            {
+              "url": "https://www.mta.info/accessibility/stations",
+              "title": "MTA accessible-station entrance reference",
+              "sourceUpdatedAt": "2026-10-12",
+              "verifiedAt": "2026-11-12T00:16:56.399774+00:00"
+            }
+          ]
+        }
+      ],
+      "platforms": [
+        {
+          "id": "R31",
+          "name": "Atlantic Av-Barclays Ctr",
+          "services": [
+            "D",
+            "N",
+            "R"
+          ],
+          "classification": "fully_accessible",
+          "directions": [
+            {
+              "label": "Manhattan",
+              "stepFree": "yes"
+            },
+            {
+              "label": "Southbound",
+              "stepFree": "yes"
+            }
+          ],
+          "notes": ""
+        },
+        {
+          "id": "D24",
+          "name": "Atlantic Av-Barclays Ctr",
+          "services": [
+            "B",
+            "Q"
+          ],
+          "classification": "fully_accessible",
+          "directions": [
+            {
+              "label": "Manhattan",
+              "stepFree": "yes"
+            },
+            {
+              "label": "Southbound",
+              "stepFree": "yes"
+            }
+          ],
+          "notes": ""
+        },
+        {
+          "id": "235",
+          "name": "Atlantic Av-Barclays Ctr",
+          "services": [
+            "2",
+            "3",
+            "4",
+            "5"
+          ],
+          "classification": "fully_accessible",
+          "directions": [
+            {
+              "label": "Manhattan",
+              "stepFree": "yes"
+            },
+            {
+              "label": "Outbound",
+              "stepFree": "yes"
+            }
+          ],
+          "notes": ""
+        }
+      ],
+      "platformNotes": [
+        "Atlantic Av-Barclays Ctr (D/N/R): fully accessible",
+        "Atlantic Av-Barclays Ctr (B/Q): fully accessible",
+        "Atlantic Av-Barclays Ctr (2/3/4/5): fully accessible"
+      ],
+      "equipmentNotes": [
+        "Current elevator status has not been checked."
+      ],
+      "currentElevatorStatus": "not_checked",
+      "officialStatusUrl": "https://www.mta.info/elevator-escalator-status",
+      "snapshotVerifiedAt": "2026-11-12T00:16:56.399774+00:00",
+      "lastSuccessfulRefreshAt": null,
+      "refreshState": "not_implemented",
+      "sources": [
+        {
+          "url": "https://data.ny.gov/Transportation/MTA-Subway-Stations/39hk-dx4f",
+          "title": "MTA Subway Stations \u00b7 NY Open Data",
+          "sourceUpdatedAt": "2026-11-11T05:20:07+00:00",
+          "verifiedAt": "2026-11-12T00:16:56.399774+00:00"
+        },
+        {
+          "url": "https://www.mta.info/accessibility/stations",
+          "title": "MTA accessible-station entrance reference",
+          "sourceUpdatedAt": "2026-10-12",
+          "verifiedAt": "2026-11-12T00:16:56.399774+00:00"
+        }
+      ]
+    },
+    {
+      "station": {
+        "stationId": "636",
+        "stationName": "Jay St\u2013MetroTech",
+        "borough": "Brooklyn",
+        "services": [
+          "R",
+          "A",
+          "C",
+          "F"
+        ]
+      },
+      "aliases": [
+        "Jay St-MetroTech",
+        "Jay St-MetroTech"
+      ],
+      "adaClassification": "fully_accessible",
+      "directionNotes": "Read each service and direction separately. A station listing does not confirm that equipment is operating.",
+      "entrances": [
+        {
+          "entranceId": "636-reference-1",
+          "locationDescription": "Northwest corner, Jay Street / Willoughby Street.",
+          "stepFree": "yes",
+          "entryAllowed": null,
+          "exitAllowed": null,
+          "services": [],
+          "directionNotes": "Match the relevant service and direction using the official entrance reference; opening hours and equipment operation are not checked.",
+          "sources": [
+            {
+              "url": "https://www.mta.info/accessibility/stations",
+              "title": "MTA accessible-station entrance reference",
+              "sourceUpdatedAt": "2026-10-12",
+              "verifiedAt": "2026-11-12T00:16:56.399774+00:00"
+            }
+          ]
+        }
+      ],
+      "platforms": [
+        {
+          "id": "R29",
+          "name": "Jay St-MetroTech",
+          "services": [
+            "R"
+          ],
+          "classification": "fully_accessible",
+          "directions": [
+            {
+              "label": "Manhattan",
+              "stepFree": "yes"
+            },
+            {
+              "label": "Southbound",
+              "stepFree": "yes"
+            }
+          ],
+          "notes": ""
+        },
+        {
+          "id": "A41",
+          "name": "Jay St-MetroTech",
+          "services": [
+            "A",
+            "C",
+            "F"
+          ],
+          "classification": "fully_accessible",
+          "directions": [
+            {
+              "label": "Manhattan",
+              "stepFree": "yes"
+            },
+            {
+              "label": "Outbound",
+              "stepFree": "yes"
+            }
+          ],
+          "notes": ""
+        }
+      ],
+      "platformNotes": [
+        "Jay St-MetroTech (R): fully accessible",
+        "Jay St-MetroTech (A/C/F): fully accessible"
+      ],
+      "equipmentNotes": [
+        "Current elevator status has not been checked."
+      ],
+      "currentElevatorStatus": "not_checked",
+      "officialStatusUrl": "https://www.mta.info/elevator-escalator-status",
+      "snapshotVerifiedAt": "2026-11-12T00:16:56.399774+00:00",
+      "lastSuccessfulRefreshAt": null,
+      "refreshState": "not_implemented",
+      "sources": [
+        {
+          "url": "https://data.ny.gov/Transportation/MTA-Subway-Stations/39hk-dx4f",
+          "title": "MTA Subway Stations \u00b7 NY Open Data",
+          "sourceUpdatedAt": "2026-11-11T05:20:07+00:00",
+          "verifiedAt": "2026-11-12T00:16:56.399774+00:00"
+        },
+        {
+          "url": "https://www.mta.info/accessibility/stations",
+          "title": "MTA accessible-station entrance reference",
+          "sourceUpdatedAt": "2026-10-12",
+          "verifiedAt": "2026-11-12T00:16:56.399774+00:00"
+        }
+      ]
+    },
+    {
+      "station": {
+        "stationId": "620",
+        "stationName": "Borough Hall / Court St",
+        "borough": "Brooklyn",
+        "services": [
+          "R",
+          "2",
+          "3",
+          "4",
+          "5"
+        ]
+      },
+      "aliases": [
+        "Court St",
+        "Borough Hall",
+        "Borough Hall"
+      ],
+      "adaClassification": "partially_accessible",
+      "directionNotes": "Borough Hall platforms are listed as accessible; Court St (R) and the transfer to Court St are not accessible.",
+      "entrances": [
+        {
+          "entranceId": "620-reference-1",
+          "locationDescription": "Outside the Supreme Court building on Court Street.",
+          "stepFree": "yes",
+          "entryAllowed": null,
+          "exitAllowed": null,
+          "services": [],
+          "directionNotes": "Match the relevant service and direction using the official entrance reference; opening hours and equipment operation are not checked.",
+          "sources": [
+            {
+              "url": "https://www.mta.info/accessibility/stations",
+              "title": "MTA accessible-station entrance reference",
+              "sourceUpdatedAt": "2026-10-12",
+              "verifiedAt": "2026-11-12T00:16:56.399774+00:00"
+            }
+          ]
+        },
+        {
+          "entranceId": "620-reference-2",
+          "locationDescription": "Outside Borough Hall on Joralemon Street.",
+          "stepFree": "yes",
+          "entryAllowed": null,
+          "exitAllowed": null,
+          "services": [],
+          "directionNotes": "Match the relevant service and direction using the official entrance reference; opening hours and equipment operation are not checked.",
+          "sources": [
+            {
+              "url": "https://www.mta.info/accessibility/stations",
+              "title": "MTA accessible-station entrance reference",
+              "sourceUpdatedAt": "2026-10-12",
+              "verifiedAt": "2026-11-12T00:16:56.399774+00:00"
+            }
+          ]
+        }
+      ],
+      "platforms": [
+        {
+          "id": "R28",
+          "name": "Court St",
+          "services": [
+            "R"
+          ],
+          "classification": "not_accessible",
+          "directions": [
+            {
+              "label": "Manhattan",
+              "stepFree": "no"
+            },
+            {
+              "label": "Southbound",
+              "stepFree": "no"
+            }
+          ],
+          "notes": ""
+        },
+        {
+          "id": "232",
+          "name": "Borough Hall",
+          "services": [
+            "2",
+            "3"
+          ],
+          "classification": "fully_accessible",
+          "directions": [
+            {
+              "label": "Manhattan",
+              "stepFree": "yes"
+            },
+            {
+              "label": "Outbound",
+              "stepFree": "yes"
+            }
+          ],
+          "notes": ""
+        },
+        {
+          "id": "423",
+          "name": "Borough Hall",
+          "services": [
+            "4",
+            "5"
+          ],
+          "classification": "fully_accessible",
+          "directions": [
+            {
+              "label": "Manhattan",
+              "stepFree": "yes"
+            },
+            {
+              "label": "Outbound",
+              "stepFree": "yes"
+            }
+          ],
+          "notes": ""
+        }
+      ],
+      "platformNotes": [
+        "Court St (R): not accessible",
+        "Borough Hall (2/3): fully accessible",
+        "Borough Hall (4/5): fully accessible"
+      ],
+      "equipmentNotes": [
+        "Current elevator status has not been checked."
+      ],
+      "currentElevatorStatus": "not_checked",
+      "officialStatusUrl": "https://www.mta.info/elevator-escalator-status",
+      "snapshotVerifiedAt": "2026-11-12T00:16:56.399774+00:00",
+      "lastSuccessfulRefreshAt": null,
+      "refreshState": "not_implemented",
+      "sources": [
+        {
+          "url": "https://data.ny.gov/Transportation/MTA-Subway-Stations/39hk-dx4f",
+          "title": "MTA Subway Stations \u00b7 NY Open Data",
+          "sourceUpdatedAt": "2026-11-11T05:20:07+00:00",
+          "verifiedAt": "2026-11-12T00:16:56.399774+00:00"
+        },
+        {
+          "url": "https://www.mta.info/accessibility/stations",
+          "title": "MTA accessible-station entrance reference",
+          "sourceUpdatedAt": "2026-10-12",
+          "verifiedAt": "2026-11-12T00:16:56.399774+00:00"
+        }
+      ]
+    },
+    {
+      "station": {
+        "stationId": "616",
+        "stationName": "Jackson Hts / 74 St\u2013Broadway",
+        "borough": "Queens",
+        "services": [
+          "E",
+          "F",
+          "M",
+          "R",
+          "7"
+        ]
+      },
+      "aliases": [
+        "Jackson Hts-Roosevelt Av",
+        "74 St-Broadway"
+      ],
+      "adaClassification": "fully_accessible",
+      "directionNotes": "Read each service and direction separately. A station listing does not confirm that equipment is operating.",
+      "entrances": [
+        {
+          "entranceId": "616-reference-1",
+          "locationDescription": "Station house: northwest corner, Roosevelt Avenue / Broadway.",
+          "stepFree": "yes",
+          "entryAllowed": null,
+          "exitAllowed": null,
+          "services": [],
+          "directionNotes": "Match the relevant service and direction using the official entrance reference; opening hours and equipment operation are not checked.",
+          "sources": [
+            {
+              "url": "https://www.mta.info/accessibility/stations",
+              "title": "MTA accessible-station entrance reference",
+              "sourceUpdatedAt": "2026-10-12",
+              "verifiedAt": "2026-11-12T00:16:56.399774+00:00"
+            }
+          ]
+        }
+      ],
+      "platforms": [
+        {
+          "id": "G14",
+          "name": "Jackson Hts-Roosevelt Av",
+          "services": [
+            "E",
+            "F",
+            "M",
+            "R"
+          ],
+          "classification": "fully_accessible",
+          "directions": [
+            {
+              "label": "Outbound",
+              "stepFree": "yes"
+            },
+            {
+              "label": "Manhattan",
+              "stepFree": "yes"
+            }
+          ],
+          "notes": ""
+        },
+        {
+          "id": "710",
+          "name": "74 St-Broadway",
+          "services": [
+            "7"
+          ],
+          "classification": "fully_accessible",
+          "directions": [
+            {
+              "label": "Outbound",
+              "stepFree": "yes"
+            },
+            {
+              "label": "Manhattan",
+              "stepFree": "yes"
+            }
+          ],
+          "notes": ""
+        }
+      ],
+      "platformNotes": [
+        "Jackson Hts-Roosevelt Av (E/F/M/R): fully accessible",
+        "74 St-Broadway (7): fully accessible"
+      ],
+      "equipmentNotes": [
+        "Current elevator status has not been checked."
+      ],
+      "currentElevatorStatus": "not_checked",
+      "officialStatusUrl": "https://www.mta.info/elevator-escalator-status",
+      "snapshotVerifiedAt": "2026-11-12T00:16:56.399774+00:00",
+      "lastSuccessfulRefreshAt": null,
+      "refreshState": "not_implemented",
+      "sources": [
+        {
+          "url": "https://data.ny.gov/Transportation/MTA-Subway-Stations/39hk-dx4f",
+          "title": "MTA Subway Stations \u00b7 NY Open Data",
+          "sourceUpdatedAt": "2026-11-11T05:20:07+00:00",
+          "verifiedAt": "2026-11-12T00:16:56.399774+00:00"
+        },
+        {
+          "url": "https://www.mta.info/accessibility/stations",
+          "title": "MTA accessible-station entrance reference",
+          "sourceUpdatedAt": "2026-10-12",
+          "verifiedAt": "2026-11-12T00:16:56.399774+00:00"
+        }
+      ]
+    },
+    {
+      "station": {
+        "stationId": "606",
+        "stationName": "Court Sq / Court Sq\u201323 St",
+        "borough": "Queens",
+        "services": [
+          "E",
+          "F",
+          "G",
+          "7"
+        ]
+      },
+      "aliases": [
+        "Court Sq-23 St",
+        "Court Sq",
+        "Court Sq"
+      ],
+      "adaClassification": "partially_accessible",
+      "directionNotes": "Court Sq\u201323 St access is Manhattan-bound only. Check the separate service and direction records below.",
+      "entrances": [
+        {
+          "entranceId": "606-reference-1",
+          "locationDescription": "Court Sq: northeast corner, Jackson Avenue / 23rd Street.",
+          "stepFree": "yes",
+          "entryAllowed": null,
+          "exitAllowed": null,
+          "services": [],
+          "directionNotes": "Match the relevant service and direction using the official entrance reference; opening hours and equipment operation are not checked.",
+          "sources": [
+            {
+              "url": "https://www.mta.info/accessibility/stations",
+              "title": "MTA accessible-station entrance reference",
+              "sourceUpdatedAt": "2026-10-12",
+              "verifiedAt": "2026-11-12T00:16:56.399774+00:00"
+            }
+          ]
+        },
+        {
+          "entranceId": "606-reference-2",
+          "locationDescription": "Court Sq\u201323 St: City View Tower, 23-15 44th Drive; Manhattan-bound access only.",
+          "stepFree": "yes",
+          "entryAllowed": null,
+          "exitAllowed": null,
+          "services": [],
+          "directionNotes": "Match the relevant service and direction using the official entrance reference; opening hours and equipment operation are not checked.",
+          "sources": [
+            {
+              "url": "https://www.mta.info/accessibility/stations",
+              "title": "MTA accessible-station entrance reference",
+              "sourceUpdatedAt": "2026-10-12",
+              "verifiedAt": "2026-11-12T00:16:56.399774+00:00"
+            }
+          ]
+        }
+      ],
+      "platforms": [
+        {
+          "id": "F09",
+          "name": "Court Sq-23 St",
+          "services": [
+            "E",
+            "F"
+          ],
+          "classification": "partially_accessible",
+          "directions": [
+            {
+              "label": "Outbound",
+              "stepFree": "no"
+            },
+            {
+              "label": "Manhattan",
+              "stepFree": "yes"
+            }
+          ],
+          "notes": "Manhattan-bound only"
+        },
+        {
+          "id": "G22",
+          "name": "Court Sq",
+          "services": [
+            "G"
+          ],
+          "classification": "fully_accessible",
+          "directions": [
+            {
+              "label": "Last Stop",
+              "stepFree": "yes"
+            },
+            {
+              "label": "Brooklyn",
+              "stepFree": "yes"
+            }
+          ],
+          "notes": ""
+        },
+        {
+          "id": "719",
+          "name": "Court Sq",
+          "services": [
+            "7"
+          ],
+          "classification": "fully_accessible",
+          "directions": [
+            {
+              "label": "Outbound",
+              "stepFree": "yes"
+            },
+            {
+              "label": "Manhattan",
+              "stepFree": "yes"
+            }
+          ],
+          "notes": ""
+        }
+      ],
+      "platformNotes": [
+        "Court Sq-23 St (E/F): partially accessible \u2014 Manhattan-bound only",
+        "Court Sq (G): fully accessible",
+        "Court Sq (7): fully accessible"
+      ],
+      "equipmentNotes": [
+        "Current elevator status has not been checked."
+      ],
+      "currentElevatorStatus": "not_checked",
+      "officialStatusUrl": "https://www.mta.info/elevator-escalator-status",
+      "snapshotVerifiedAt": "2026-11-12T00:16:56.399774+00:00",
+      "lastSuccessfulRefreshAt": null,
+      "refreshState": "not_implemented",
+      "sources": [
+        {
+          "url": "https://data.ny.gov/Transportation/MTA-Subway-Stations/39hk-dx4f",
+          "title": "MTA Subway Stations \u00b7 NY Open Data",
+          "sourceUpdatedAt": "2026-11-11T05:20:07+00:00",
+          "verifiedAt": "2026-11-12T00:16:56.399774+00:00"
+        },
+        {
+          "url": "https://www.mta.info/accessibility/stations",
+          "title": "MTA accessible-station entrance reference",
+          "sourceUpdatedAt": "2026-10-12",
+          "verifiedAt": "2026-11-12T00:16:56.399774+00:00"
+        }
+      ]
+    },
+    {
+      "station": {
+        "stationId": "461",
+        "stationName": "Queensboro Plaza",
+        "borough": "Queens",
+        "services": [
+          "N",
+          "W",
+          "7"
+        ]
+      },
+      "aliases": [
+        "Queensboro Plaza",
+        "Queensboro Plaza"
+      ],
+      "adaClassification": "fully_accessible",
+      "directionNotes": "Read each service and direction separately. A station listing does not confirm that equipment is operating.",
+      "entrances": [
+        {
+          "entranceId": "461-reference-1",
+          "locationDescription": "Southwest corner, Queens Plaza South / Crescent Street.",
+          "stepFree": "yes",
+          "entryAllowed": null,
+          "exitAllowed": null,
+          "services": [],
+          "directionNotes": "Match the relevant service and direction using the official entrance reference; opening hours and equipment operation are not checked.",
+          "sources": [
+            {
+              "url": "https://www.mta.info/accessibility/stations",
+              "title": "MTA accessible-station entrance reference",
+              "sourceUpdatedAt": "2026-10-12",
+              "verifiedAt": "2026-11-12T00:16:56.399774+00:00"
+            }
+          ]
+        }
+      ],
+      "platforms": [
+        {
+          "id": "R09",
+          "name": "Queensboro Plaza",
+          "services": [
+            "N",
+            "W"
+          ],
+          "classification": "fully_accessible",
+          "directions": [
+            {
+              "label": "Astoria",
+              "stepFree": "yes"
+            },
+            {
+              "label": "Manhattan",
+              "stepFree": "yes"
+            }
+          ],
+          "notes": ""
+        },
+        {
+          "id": "718",
+          "name": "Queensboro Plaza",
+          "services": [
+            "7"
+          ],
+          "classification": "fully_accessible",
+          "directions": [
+            {
+              "label": "Outbound",
+              "stepFree": "yes"
+            },
+            {
+              "label": "Manhattan",
+              "stepFree": "yes"
+            }
+          ],
+          "notes": ""
+        }
+      ],
+      "platformNotes": [
+        "Queensboro Plaza (N/W): fully accessible",
+        "Queensboro Plaza (7): fully accessible"
+      ],
+      "equipmentNotes": [
+        "Current elevator status has not been checked."
+      ],
+      "currentElevatorStatus": "not_checked",
+      "officialStatusUrl": "https://www.mta.info/elevator-escalator-status",
+      "snapshotVerifiedAt": "2026-11-12T00:16:56.399774+00:00",
+      "lastSuccessfulRefreshAt": null,
+      "refreshState": "not_implemented",
+      "sources": [
+        {
+          "url": "https://data.ny.gov/Transportation/MTA-Subway-Stations/39hk-dx4f",
+          "title": "MTA Subway Stations \u00b7 NY Open Data",
+          "sourceUpdatedAt": "2026-11-11T05:20:07+00:00",
+          "verifiedAt": "2026-11-12T00:16:56.399774+00:00"
+        },
+        {
+          "url": "https://www.mta.info/accessibility/stations",
+          "title": "MTA accessible-station entrance reference",
+          "sourceUpdatedAt": "2026-10-12",
+          "verifiedAt": "2026-11-12T00:16:56.399774+00:00"
+        }
+      ]
+    }
+  ]
+}

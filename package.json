@@ -1,0 +1,20 @@
+{
+  "name": "access-granted-nyc",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {"node": ">=22"},
+  "scripts": {
+    "start": "node --env-file-if-exists=.env server.js",
+    "dev": "node --watch --env-file-if-exists=.env server.js",
+    "test": "node --test",
+    "check": "node --check server.js && node --check public/app.js && node --test",
+    "data:review": "node scripts/review-data.js"
+  },
+  "dependencies": {
+    "@google/genai": "^1.0.0",
+    "express": "^5.1.0",
+    "express-rate-limit": "^8.0.0",
+    "zod": "^4.0.0"
+  }
+}
