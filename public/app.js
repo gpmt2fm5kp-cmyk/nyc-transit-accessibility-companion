@@ -28,7 +28,7 @@ function setThemeControl() {
   const dark = document.documentElement.dataset.theme === 'dark';
   $('#theme-toggle').setAttribute('aria-label', `Switch to ${dark ? 'light' : 'dark'} mode`);
   $('#theme-toggle').setAttribute('title', `Switch to ${dark ? 'light' : 'dark'} mode`);
-  document.querySelector('meta[name="theme-color"]').content = dark ? '#080808' : '#f5f6f2';
+  document.querySelector('meta[name="theme-color"]').content = dark ? '#080808' : '#f6f6f7';
 }
 $('#theme-toggle').addEventListener('click', () => {
   const theme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
@@ -95,22 +95,40 @@ function renderRecord() {
   $('#station-name').textContent=record.station.stationName;
   $('#station-routes').replaceChildren(routes(record.station.services));
   $('#station-borough').textContent=record.station.borough;
-  $('#access-label').textContent={fully_accessible:'Step-free access is listed',partially_accessible:'Step-free access is limited',not_accessible:'No step-free access is listed',unknown:'Step-free access is not confirmed'}[record.adaClassification];
+  $('#access-label').textContent={fully_accessible:'Listed in MTA reference',partially_accessible:'Limited — see restrictions',not_accessible:'Not listed in MTA reference',unknown:'Not confirmed'}[record.adaClassification];
   $('#access-summary').dataset.access=record.adaClassification;
   $('.access-summary-icon').replaceChildren(icon(record.adaClassification==='not_accessible'?'no-access':'wheelchair'));
-  $('#entrance-count').textContent=record.entrances.length ? `${record.entrances.length} recorded ${record.entrances.length===1?'entrance':'entrances'}` : 'No step-free entrance recorded';
   $('#access-description').textContent=record.adaClassification==='not_accessible'
-    ? 'The checked MTA station record does not list a step-free accessible station here. Ask MTA about suitable alternatives.'
+    ? 'Plan an accessible alternative with MTA.'
     : record.adaClassification==='partially_accessible'
-      ? 'Some services or directions have different access. The restrictions are shown below; match them to the train and direction you need.'
-      : 'The checked MTA record lists accessible platforms. Use the documented entrance and check current equipment status before travel.';
+      ? 'Access depends on your service or direction.'
+      : 'Use the documented entrance below.';
   const entrances=$('#entrance-content'); entrances.replaceChildren();
-  if (!record.entrances.length) entrances.append(element('p','No step-free entrance is documented in this pilot record. We cannot recommend an entrance here.'));
+  if (!record.entrances.length) entrances.append(element('p','None documented.'));
   else {
-    const list=element('ul');
+    const list=element('ul',undefined,'entrance-list');
     for (const entrance of record.entrances) list.append(element('li',entrance.locationDescription));
-    entrances.append(list,element('p','Documented locations only. Check MTA for your service, direction, and current entrance or elevator availability.'));
+    entrances.append(list);
   }
+  const quickPlatforms=$('#quick-platform-content');quickPlatforms.replaceChildren();
+  if(record.adaClassification==='fully_accessible') quickPlatforms.append(element('p','Step-free platforms listed.'));
+  else if(record.adaClassification==='not_accessible') quickPlatforms.append(element('p','No step-free platforms listed.'));
+  else {
+    const unrestricted=[...new Set(record.platforms.filter(p=>p.classification==='fully_accessible').flatMap(p=>p.services))];
+    if(unrestricted.length) quickPlatforms.append(element('p',`${unrestricted.join(' / ')} · access listed`));
+    for(const platform of record.platforms.filter(p=>p.classification!=='fully_accessible')) {
+      const note=platform.classification==='not_accessible'?'no step-free access listed':platform.notes || 'direction restrictions; see details';
+      quickPlatforms.append(element('p',`${platform.services.join(' / ')} · ${note}`));
+    }
+  }
+  const restrictions={
+    '611':'Port Authority passage: ramps do not meet ADA guidelines.',
+    '620':'Court St (R) and its transfer are not accessible.',
+    '606':'E / F: Manhattan-bound access only.'
+  };
+  const restriction=restrictions[record.station.stationId];
+  $('#quick-restriction').textContent=restriction || '';
+  $('#quick-restriction').hidden=!restriction;
   const platformContent=$('#platform-content'); platformContent.replaceChildren();
   if(record.adaClassification==='partially_accessible' || /not ADA|not accessible|not meet ADA/.test(record.directionNotes)) { const restriction=element('p',record.directionNotes,'restriction-note'); platformContent.append(restriction); }
   for (const platform of record.platforms) {
@@ -132,7 +150,7 @@ function renderRecord() {
     const section=element('div',undefined,'platform-record');
     section.append(link,element('p',`Checked ${date(source.verifiedAt)}. Source updated ${source.sourceUpdatedAt ? date(source.sourceUpdatedAt) : 'date not supplied'}.`,'source-date'));sourceContent.append(section);
   }
-  sourceContent.append(element('p','This snapshot changes when we review and redeploy it. Automatic daily refresh is not implemented. Verification is not a live equipment check.'));
+  sourceContent.append(element('p','Snapshot updated by review and redeployment; no automatic refresh or live equipment check.'));
   $('#snapshot-caption').textContent=`Reference checked ${date(record.snapshotVerifiedAt)} · No live elevator feed · No automatic refresh`;
   for (const button of document.querySelectorAll('.station-button')) button.setAttribute('aria-current',String(button.dataset.stationId===record.station.stationId));
   $('#station-detail').setAttribute('aria-busy','false');
@@ -199,6 +217,6 @@ async function initialize(){
   const requested=new URLSearchParams(location.search).get('station');
   const first=state.stations.find(s=>s.stationId===requested)||state.stations[0];
   if(first)await selectStation(first.stationId);
-  try{const health=await request('/api/health');state.aiConfigured=health.aiConfigured;$('#ai-status').textContent=health.aiConfigured?'Gemini key configured · ready for a question.':'AI guide not connected yet. Station cards are available.';$('#ai-status').classList.toggle('connected',health.aiConfigured);}catch{$('#ai-status').textContent='Guide connection unavailable. Try refreshing.';}
+  try{const health=await request('/api/health');state.aiConfigured=health.aiConfigured;$('#ai-status').textContent=health.aiConfigured?'AI guide ready':'AI guide not connected yet. Station cards are available.';$('#ai-status').classList.toggle('connected',health.aiConfigured);}catch{$('#ai-status').textContent='Guide connection unavailable. Try refreshing.';}
 }
 initialize();
