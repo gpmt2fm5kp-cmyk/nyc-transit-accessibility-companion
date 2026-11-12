@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { createApp } from '../server.js';
+import { createApp, rateLimitKey } from '../server.js';
 import { dataset, search_stations, get_station_accessibility, demonstrationFor } from '../src/station-tools.js';
 import { askGuide } from '../src/guide.js';
 
@@ -80,3 +80,10 @@ test('working provider path returns an answer and guards rapid repeated usage',(
   assert.equal((await post(base,{stationId:'471',question:'Which entrance?'})).status,429);
   assert.equal((await fetch(`${base}/api/stations`)).status,200);
 }));
+
+test('proxy IP headers are used only on Vercel',()=>{
+ const request={headers:{'x-forwarded-for':'203.0.113.10'},ip:'127.0.0.1'};
+ assert.equal(rateLimitKey(request,false),'127.0.0.1');
+ assert.equal(rateLimitKey(request,true),'203.0.113.10');
+ assert.equal(rateLimitKey({headers:{'x-forwarded-for':'invalid'},ip:'127.0.0.1'},true),'127.0.0.1');
+});

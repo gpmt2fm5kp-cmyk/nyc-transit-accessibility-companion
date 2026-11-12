@@ -1,10 +1,17 @@
 import express from 'express';
-import { rateLimit } from 'express-rate-limit';
+import { rateLimit, ipKeyGenerator } from 'express-rate-limit';
+import { isIP } from 'node:net';
 import { ZodError } from 'zod';
 import { fileURLToPath } from 'node:url';
 import { resolve } from 'node:path';
 import { dataset, search_stations, get_station_accessibility, demonstrationFor } from './src/station-tools.js';
 import { askSchema, askGuide } from './src/guide.js';
+
+export function rateLimitKey(req, onVercel = process.env.VERCEL === '1') {
+  // Vercel overwrites X-Forwarded-For; only trust it on that platform.
+  const forwarded = String(req.headers['x-forwarded-for'] || '').split(',')[0].trim();
+  return ipKeyGenerator(onVercel && isIP(forwarded) ? forwarded : req.ip);
+}
 
 export function createApp({ answer = askGuide, keyConfigured = () => Boolean(process.env.GEMINI_API_KEY) } = {}) {
   const app = express();
@@ -19,7 +26,7 @@ export function createApp({ answer = askGuide, keyConfigured = () => Boolean(pro
   app.get('/api/stations', (req, res) => res.json({ ...search_stations({ query: req.query.query ?? '', borough: req.query.borough ?? 'All' }), verifiedAt: dataset.verifiedAt }));
   app.get('/api/stations/:stationId', (req, res) => res.json(get_station_accessibility({ stationId: req.params.stationId })));
   app.get('/api/stations/:stationId/demo', (req, res) => res.json(demonstrationFor(get_station_accessibility({ stationId: req.params.stationId }).record)));
-  const questionLimit = rateLimit({ windowMs: 60_000, limit: 8, standardHeaders: 'draft-8', legacyHeaders: false, message: { error: 'rate_limited', message: 'Please wait a minute before asking another question. Station cards are still available.' } });
+  const questionLimit = rateLimit({ windowMs: 60_000, limit: 8, keyGenerator: req => rateLimitKey(req), standardHeaders: 'draft-8', legacyHeaders: false, message: { error: 'rate_limited', message: 'Please wait a minute before asking another question. Station cards are still available.' } });
   app.post('/api/ask', questionLimit, async (req, res, next) => {
     try {
       const origin = req.get('origin');
@@ -37,6 +44,7 @@ export function createApp({ answer = askGuide, keyConfigured = () => Boolean(pro
         if (status === 429) { code = 'ai_quota'; message = 'Google has reached a usage limit for this AI connection. Try later; station cards and official MTA links are still available.'; }
         else if (status === 401 || status === 403 || /API_KEY_INVALID|API key not valid|key expired/i.test(raw)) { code = 'ai_credentials'; message = 'The AI connection needs its private Gemini key checked by the project owner. Station cards are still available.'; }
         else if (status === 404) { code = 'ai_model'; message = 'The configured AI model is unavailable. The project owner needs to select a supported Gemini model. Station cards are still available.'; }
+        else if (status === 504) { code = 'ai_timeout'; message = 'The AI provider took too long to respond. Try again shortly; station cards remain available.'; }
         else if (status === 400) { code = 'ai_request'; }
         else if (error instanceof ZodError || error instanceof SyntaxError) { code = 'ai_response'; }
         else if (/abort|timed? ?out|timeout/i.test(raw)) { code = 'ai_timeout'; }

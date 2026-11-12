@@ -21,7 +21,7 @@ cp .env.example .env
 pnpm start
 ```
 
-Open `http://127.0.0.1:8770`. No Gemini key is needed for station cards or the sample scenario. `GEMINI_API_KEY` enables AI; `GEMINI_MODEL` is an optional model identifier, never a replacement for the key. The default model alias is `gemini-flash-latest`.
+Open `http://127.0.0.1:8770`. No Gemini key is needed for station cards or the sample scenario. `GEMINI_API_KEY` enables AI; `GEMINI_MODEL` is an optional model identifier, never a replacement for the key. The default model alias is `gemini-2.5-flash-lite`.
 
 ## Deploy to Vercel
 

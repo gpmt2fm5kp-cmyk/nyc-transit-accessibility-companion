@@ -13,8 +13,9 @@ export const askSchema = z.object({
 }).strict();
 export async function generateAnswer({ record, question, history, demo }) {
   const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+  const model = process.env.GEMINI_MODEL || 'gemini-2.5-flash-lite';
   const result = await ai.models.generateContent({
-    model: process.env.GEMINI_MODEL || 'gemini-flash-latest',
+    model,
     contents: [{ role: 'user', parts: [{ text: JSON.stringify({
       trustedContext: { selectedStation: record.station.stationId, dataMode: demo ? 'demonstration' : 'snapshot', stationToolResult: { record }, demonstration: demo || null },
       untrustedConversation: history,
@@ -25,6 +26,7 @@ export async function generateAnswer({ record, question, history, demo }) {
       responseMimeType: 'application/json',
       responseJsonSchema: z.toJSONSchema(answerSchema),
       temperature: 0.2,
+      ...(model.startsWith('gemini-2.5-flash') ? { thinkingConfig: { thinkingBudget: 0 } } : {}),
       maxOutputTokens: 800,
       httpOptions: { timeout: 22000, retryOptions: { attempts: 1 } },
     },
