@@ -13,7 +13,7 @@ export const askSchema = z.object({
 }).strict();
 export async function generateAnswer({ record, question, history, demo }) {
   const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
-  const model = process.env.GEMINI_MODEL || 'gemini-2.5-flash-lite';
+  const model = process.env.GEMINI_MODEL || 'gemini-3.5-flash-lite';
   const result = await ai.models.generateContent({
     model,
     contents: [{ role: 'user', parts: [{ text: JSON.stringify({
@@ -26,8 +26,8 @@ export async function generateAnswer({ record, question, history, demo }) {
       responseMimeType: 'application/json',
       responseJsonSchema: z.toJSONSchema(answerSchema),
       temperature: 0.2,
-      ...(model.startsWith('gemini-2.5-flash') ? { thinkingConfig: { thinkingBudget: 0 } } : {}),
-      maxOutputTokens: 800,
+      ...(model === 'gemini-3.5-flash-lite' ? { thinkingConfig: { thinkingLevel: 'MINIMAL' } } : {}),
+      maxOutputTokens: 1200,
       httpOptions: { timeout: 22000, retryOptions: { attempts: 1 } },
     },
   });
