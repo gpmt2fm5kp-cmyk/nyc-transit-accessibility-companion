@@ -3,6 +3,13 @@ const state = { stations: [], record: null, borough: 'All', query: '', history: 
 const classifications = { fully_accessible: 'Listed ADA accessible', partially_accessible: 'Some access is restricted', not_accessible: 'Not listed as ADA accessible', unknown: 'Accessibility not confirmed' };
 const groupColors = { '1':'red','2':'red','3':'red','4':'green','5':'green','6':'green','7':'purple',A:'blue',C:'blue',E:'blue',B:'orange',D:'orange',F:'orange',M:'orange',N:'yellow',Q:'yellow',R:'yellow',W:'yellow',G:'lime' };
 function element(tag, text, className) { const node = document.createElement(tag); if (text !== undefined) node.textContent = text; if (className) node.className = className; return node; }
+function icon(name) {
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  svg.setAttribute('viewBox', '0 0 24 24'); svg.setAttribute('aria-hidden', 'true'); svg.classList.add('access-icon');
+  const use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
+  use.setAttribute('href', `/icons.svg#${name}`); svg.append(use); return svg;
+}
+for (const slot of document.querySelectorAll('[data-icon]')) slot.append(icon(slot.dataset.icon));
 function routes(services, limit = services.length) {
   const container = element('span', undefined, 'routes');
   for (const service of services.slice(0, limit)) { const badge = element('span', service, `route ${groupColors[service] || ''}`); badge.setAttribute('aria-label', `Line ${service}`); container.append(badge); }
@@ -48,7 +55,9 @@ function renderStations() {
     button.setAttribute('aria-current', String(state.record?.station.stationId === station.stationId));
     button.setAttribute('aria-label', `${station.stationName}, lines ${station.services.join(', ')}, ${station.borough}. ${classifications[station.classification]}.`);
     const sub = element('span', undefined, 'station-subline'); sub.append(routes(station.services, 4), element('span', station.borough));
-    button.append(element('strong', station.stationName), sub);
+    const access = element('span', undefined, 'station-access-status');
+    access.append(icon(station.classification==='not_accessible'?'no-access':'wheelchair'), element('span', { fully_accessible: 'Step-free access listed', partially_accessible: 'Limited step-free access', not_accessible: 'No step-free access listed', unknown: 'Access not confirmed' }[station.classification]));
+    button.append(element('strong', station.stationName), sub, access);
     button.addEventListener('click', () => selectStation(station.stationId, true));
     $('#station-list').append(button);
   }
@@ -86,27 +95,32 @@ function renderRecord() {
   $('#station-name').textContent=record.station.stationName;
   $('#station-routes').replaceChildren(routes(record.station.services));
   $('#station-borough').textContent=record.station.borough;
-  $('#access-label').textContent=classifications[record.adaClassification];
+  $('#access-label').textContent={fully_accessible:'Step-free access is listed',partially_accessible:'Step-free access is limited',not_accessible:'No step-free access is listed',unknown:'Step-free access is not confirmed'}[record.adaClassification];
+  $('#access-summary').dataset.access=record.adaClassification;
+  $('.access-summary-icon').replaceChildren(icon(record.adaClassification==='not_accessible'?'no-access':'wheelchair'));
+  $('#entrance-count').textContent=record.entrances.length ? `${record.entrances.length} recorded ${record.entrances.length===1?'entrance':'entrances'}` : 'No step-free entrance recorded';
   $('#access-description').textContent=record.adaClassification==='not_accessible'
     ? 'The checked MTA station record does not list a step-free accessible station here. Ask MTA about suitable alternatives.'
     : record.adaClassification==='partially_accessible'
-      ? 'Some services or directions have different access. Open the platform details before deciding what applies to your trip.'
+      ? 'Some services or directions have different access. The restrictions are shown below; match them to the train and direction you need.'
       : 'The checked MTA record lists accessible platforms. Use the documented entrance and check current equipment status before travel.';
   const entrances=$('#entrance-content'); entrances.replaceChildren();
   if (!record.entrances.length) entrances.append(element('p','No step-free entrance is documented in this pilot record. We cannot recommend an entrance here.'));
   else {
     const list=element('ul');
     for (const entrance of record.entrances) list.append(element('li',entrance.locationDescription));
-    entrances.append(list,element('p','These are reference locations, not confirmation that an entrance or elevator is open now. The record does not establish entry/exit rules or opening hours. Match your service and direction against the MTA reference.'));
+    entrances.append(list,element('p','Documented locations only. Check MTA for your service, direction, and current entrance or elevator availability.'));
   }
-  const platformContent=$('#platform-content'); platformContent.replaceChildren(element('p',record.directionNotes));
+  const platformContent=$('#platform-content'); platformContent.replaceChildren();
+  if(record.adaClassification==='partially_accessible' || /not ADA|not accessible|not meet ADA/.test(record.directionNotes)) { const restriction=element('p',record.directionNotes,'restriction-note'); platformContent.append(restriction); }
   for (const platform of record.platforms) {
     const section=element('section',undefined,'platform-record');
     section.append(element('h4',`${platform.name} · ${platform.services.join(' / ')}`));
-    section.append(element('p',classifications[platform.classification]));
+    const classification = element('p', {fully_accessible:'Step-free access listed',partially_accessible:'Direction restriction — check below',not_accessible:'No step-free platform access listed',unknown:'Platform access not confirmed'}[platform.classification], 'platform-access-label');
+    section.append(classification);
     for (const direction of platform.directions) {
       const row=element('p',undefined,'direction-row');
-      row.append(element('span',`${direction.label}: `,'direction-label'),document.createTextNode({yes:'listed accessible in the reference',no:'not listed accessible in the reference',unknown:'access not confirmed'}[direction.stepFree]));
+      row.append(element('span',`${direction.label==='Last Stop'?'Terminal platform':direction.label}: `,'direction-label'),document.createTextNode({yes:'step-free access listed',no:'no step-free access listed',unknown:'access not confirmed'}[direction.stepFree]));
       section.append(row);
     }
     if(platform.notes) section.append(element('p',platform.notes));

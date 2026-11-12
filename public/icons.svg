@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+  <symbol id="wheelchair" viewBox="0 0 24 24"><circle cx="13" cy="3.5" r="2"/><path d="M12 8v6h6l3 7M12 10h6M8.5 10.5a6.3 6.3 0 1 0 6 9"/></symbol>
+  <symbol id="no-access" viewBox="0 0 24 24"><circle cx="13" cy="3.5" r="2"/><path d="M12 8v6h6l3 7M12 10h6M8.5 10.5a6.3 6.3 0 1 0 6 9M3 3l18 18"/></symbol>
+  <symbol id="door" viewBox="0 0 24 24"><path d="M5 21V3h14v18M3 21h18"/><circle cx="15.5" cy="12" r=".6"/></symbol>
+  <symbol id="direction" viewBox="0 0 24 24"><path d="M3 7h17l-4-4M21 17H4l4 4M20 7l-4 4M4 17l4-4"/></symbol>
+  <symbol id="elevator" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="15" rx="2"/><path d="M8 3l2-2 2 2M14 1l2 2 2-2M12 11v7M8 14l4-3 4 3"/></symbol>
+  <symbol id="question" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 8.5a2.6 2.6 0 0 1 5 1c0 2-2.5 2-2.5 4M12 17h.01"/></symbol>
+  <symbol id="warning" viewBox="0 0 24 24"><path d="m12 3 10 18H2L12 3Z"/><path d="M12 9v5M12 17h.01"/></symbol>
+  <symbol id="source" viewBox="0 0 24 24"><path d="M5 3h14v18H5zM8 7h8M8 11h8M8 15h5"/></symbol>
+</svg>
