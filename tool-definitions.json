@@ -1,7 +1,7 @@
 {
   "project": "Access Granted NYC Transit Accessibility Companion",
-  "version": "2026-11-11",
-  "implementationStatus": "Read-only server handlers and frontend integration implemented and tested. The server invokes tools deterministically. Live Gemini calls and deployment await private GEMINI_API_KEY configuration and verification. Automatic refresh and live elevator status are not implemented.",
+  "version": "2026-11-12",
+  "implementationStatus": "Read-only station tools and Gemini Q&A implemented. Public deployment and real Gemini calls previously verified. Pilot now contains 15 station complexes across all five boroughs. A separate HTTP equipment endpoint supplies MTA elevator/escalator locations and reports; the AI does not receive these reports. Station-reference auto-refresh remains unimplemented.",
   "functionDeclarations": [
     {
       "name": "search_stations",
@@ -22,7 +22,8 @@
               "Manhattan",
               "Bronx",
               "Brooklyn",
-              "Queens"
+              "Queens",
+              "Staten Island"
             ],
             "default": "All"
           }
@@ -33,7 +34,7 @@
     },
     {
       "name": "get_station_accessibility",
-      "description": "Retrieve one verified station record using an ID returned by station search. Include direction and entrance restrictions, official sources, and snapshot dates. The initial version does not check live elevator conditions.",
+      "description": "Retrieve the selected verified station reference including entrance/platform restrictions, official sources and dates. This tool does not check current equipment conditions; use the separate equipment panel.",
       "parametersJsonSchema": {
         "type": "object",
         "properties": {
@@ -429,7 +430,7 @@
     "Return only official source URLs from vetted station records. Do not expose API credentials or personal data.",
     "Daily reference refresh is a planned application process, not an AI tool. A successful refresh must be validated and saved durably before it replaces the prior snapshot.",
     "Keep any demonstration outage outside the factual record and pass an explicit trusted dataMode to the AI. The initial UI may use snapshot or demonstration mode only.",
-    "No live-status or route-planning tool is declared for the initial MVP. Show current operating conditions as not checked.",
+    "No equipment-status tool is passed to the AI. Direct current-condition questions to the timestamped equipment panel. Full routing is not implemented.",
     "Gemini Q&A output is validated separately against the response schema. Display provider failures as friendly application errors."
   ],
   "aiResponseSchema": {
@@ -453,5 +454,12 @@
       "nextStep"
     ],
     "additionalProperties": false
+  },
+  "equipmentHttpEndpoint": {
+    "method": "GET",
+    "path": "/api/stations/:stationId/equipment",
+    "usedBy": "Frontend equipment directory, not the Gemini context",
+    "refresh": "On selection, manual refresh and every 5 minutes while the page is visible; server cache up to 1 minute",
+    "coverage": "Exact complex and equipment ID matching. No matching equipment is unknown coverage, not proof of absent equipment."
   }
 }

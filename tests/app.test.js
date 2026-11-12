@@ -12,9 +12,9 @@ async function withServer(options, run) {
 }
 const post = (base, body, headers = {}) => fetch(`${base}/api/ask`, { method: 'POST', headers: { 'Content-Type':'application/json', ...headers }, body: JSON.stringify(body) });
 
-test('12 distinct official complexes preserve restricted and non-accessible records', () => {
-  assert.equal(dataset.records.length,12);
-  assert.equal(new Set(dataset.records.map(r=>r.station.stationId)).size,12);
+test('15 distinct official complexes preserve restricted and non-accessible records', () => {
+  assert.equal(dataset.records.length,15);
+  assert.equal(new Set(dataset.records.map(r=>r.station.stationId)).size,15);
   assert.equal(get_station_accessibility({stationId:'427'}).record.adaClassification,'not_accessible');
   assert.equal(get_station_accessibility({stationId:'151'}).record.adaClassification,'not_accessible');
   const court = get_station_accessibility({stationId:'606'}).record;
@@ -28,6 +28,8 @@ test('search handles service, alias, borough and empty results without inventing
   assert.ok(search_stations({query:'7'}).matches.some(s=>s.stationId==='471'));
   assert.equal(search_stations({query:'149 Grand Concourse'}).matches[0].stationId,'603');
   assert.equal(search_stations({query:'',borough:'Queens'}).matches.length,3);
+  assert.deepEqual(new Set(search_stations({query:'',borough:'Staten Island'}).matches.map(r=>r.stationId)),new Set(['501','510','522']));
+  assert.equal(get_station_accessibility({stationId:'522'}).record.entrances[0].locationDescription,'Ramp on the south side of the station.');
   assert.equal(search_stations({query:'doesnotexist'}).matches.length,0);
   assert.throws(()=>get_station_accessibility({stationId:'../../.env'}),{code:'unknown_station'});
 });
@@ -55,7 +57,7 @@ test('guide uses server evidence, validates output and limits confirmations',asy
 });
 
 test('station API and health work without a key; question fails clearly without affecting cards',()=>withServer({keyConfigured:()=>false},async base=>{
-  const health=await (await fetch(`${base}/api/health`)).json();assert.equal(health.aiConfigured,false);assert.equal(health.stationCount,12);
+  const health=await (await fetch(`${base}/api/health`)).json();assert.equal(health.aiConfigured,false);assert.equal(health.stationCount,15);
   const response=await post(base,{stationId:'471',question:'Which entrance?'});assert.equal(response.status,503);
   assert.equal((await fetch(`${base}/api/stations/471`)).status,200);
   assert.equal((await fetch(`${base}/api/stations/missing`)).status,404);
@@ -94,5 +96,16 @@ test('elevator endpoint validates station before loading and safely reports upst
   const unknown=await fetch(`${base}/api/stations/999999/elevators`);assert.equal(unknown.status,404);assert.equal(calls,0);
   const failure=await fetch(`${base}/api/stations/471/elevators`);assert.equal(failure.status,502);
   const body=await failure.json();assert.equal(body.error,'mta_unavailable');assert.doesNotMatch(JSON.stringify(body),/private upstream/);
+ });
+});
+
+test('equipment endpoint returns exact station data and keeps upstream failures private',async()=>{
+ let calls=0;
+ await withServer({equipmentStatus:async stationId=>{calls++;return {stationId,checkedAt:'2026-11-12T00:00:00Z',coverage:'no_matching_equipment',items:[]};}},async base=>{
+  assert.equal((await fetch(`${base}/api/stations/not-a-station/equipment`)).status,404);assert.equal(calls,0);
+  const r=await fetch(`${base}/api/stations/501/equipment`);assert.equal(r.status,200);const body=await r.json();assert.equal(body.stationId,'501');assert.equal(body.coverage,'no_matching_equipment');
+ });
+ await withServer({equipmentStatus:async()=>{throw Error('private upstream diagnostics');}},async base=>{
+  const r=await fetch(`${base}/api/stations/471/equipment`);assert.equal(r.status,502);assert.doesNotMatch(await r.text(),/private upstream/);
  });
 });

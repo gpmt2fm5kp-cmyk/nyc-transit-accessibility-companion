@@ -11,7 +11,19 @@ export function stationElevators(stationId, equipment, outages, checkedAt) {
   return { stationId, checkedAt, elevatorCount: elevators.length, outages: reports.filter(row => !row.upcoming), planned: reports.filter(row => row.upcoming), sourceUrl: 'https://www.mta.info/elevator-escalator-status' };
 }
 
-export function createElevatorService(fetcher = fetch, clock = () => Date.now()) {
+export function stationEquipment(stationId, equipment, outages, checkedAt) {
+  const items = equipment.filter(row => ['EL', 'ES'].includes(row.equipmenttype) && String(row.stationcomplexid) === String(stationId) && row.isactive === 'Y').map(row => {
+    const reports = outages.filter(report => report.equipment === row.equipmentno && report.equipmenttype === row.equipmenttype).map(report => ({
+      upcoming: report.isupcomingoutage === 'Y', reason: report.reason || 'Reason not supplied',
+      startsAt: report.outagedate || null, estimatedReturn: report.estimatedreturntoservice || null,
+      serving: report.serving || row.serving || 'Location not supplied'
+    }));
+    return { id: row.equipmentno, type: row.equipmenttype, station: row.station || '', serving: row.serving || 'Location not supplied', short: row.shortdescription || '', lines: row.linesservedbyelevator || row.trainno || '', outage: reports.some(report => !report.upcoming), reports };
+  });
+  return { stationId, checkedAt, items, coverage: items.length ? 'matched_equipment' : 'no_matching_equipment', sourceUrl: 'https://www.mta.info/elevator-escalator-status' };
+}
+
+function createFeedService(format, fetcher, clock) {
   let cached, pending;
   async function load() {
     const rows = await Promise.all([equipmentUrl, outagesUrl].map(async url => {
@@ -29,6 +41,14 @@ export function createElevatorService(fetcher = fetch, clock = () => Date.now())
       if (!pending) pending = load().finally(() => { pending = null; });
       await pending; // Never present an expired cache as a fresh successful check.
     }
-    return stationElevators(stationId, cached.equipment, cached.outages, new Date(cached.fetchedAt).toISOString());
+    return format(stationId, cached.equipment, cached.outages, new Date(cached.fetchedAt).toISOString());
   };
+}
+
+export function createElevatorService(fetcher = fetch, clock = () => Date.now()) {
+  return createFeedService(stationElevators, fetcher, clock);
+}
+
+export function createEquipmentService(fetcher = fetch, clock = () => Date.now()) {
+  return createFeedService(stationEquipment, fetcher, clock);
 }

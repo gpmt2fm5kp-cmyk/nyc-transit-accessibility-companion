@@ -1,5 +1,5 @@
 import express from 'express';
-import { createElevatorService } from './src/elevator-status.js';
+import { createElevatorService, createEquipmentService } from './src/elevator-status.js';
 import { rateLimit, ipKeyGenerator } from 'express-rate-limit';
 import { isIP } from 'node:net';
 import { ZodError } from 'zod';
@@ -14,7 +14,7 @@ export function rateLimitKey(req, onVercel = process.env.VERCEL === '1') {
   return ipKeyGenerator(onVercel && isIP(forwarded) ? forwarded : req.ip);
 }
 
-export function createApp({ answer = askGuide, keyConfigured = () => Boolean(process.env.GEMINI_API_KEY), elevatorStatus = createElevatorService() } = {}) {
+export function createApp({ answer = askGuide, keyConfigured = () => Boolean(process.env.GEMINI_API_KEY), elevatorStatus = createElevatorService(), equipmentStatus = createEquipmentService() } = {}) {
   const app = express();
   app.disable('x-powered-by');
   app.use((req, res, next) => {
@@ -26,6 +26,15 @@ export function createApp({ answer = askGuide, keyConfigured = () => Boolean(pro
   app.get('/api/health', (req, res) => res.json({ ok: true, aiConfigured: keyConfigured(), stationCount: dataset.records.length, dataVerifiedAt: dataset.verifiedAt, refreshState: 'not_implemented', liveStatus: 'on_demand_mta_feed' }));
   app.get('/api/stations', (req, res) => res.json({ ...search_stations({ query: req.query.query ?? '', borough: req.query.borough ?? 'All' }), verifiedAt: dataset.verifiedAt }));
   app.get('/api/stations/:stationId', (req, res) => res.json(get_station_accessibility({ stationId: req.params.stationId })));
+  app.get('/api/stations/:stationId/equipment', async (req, res, next) => {
+    try {
+      get_station_accessibility({ stationId: req.params.stationId });
+      res.json(await equipmentStatus(req.params.stationId));
+    } catch (error) {
+      if (error.status === 404) return next(error);
+      res.status(502).json({ error: 'mta_unavailable', message: 'MTA equipment updates could not be checked. Use the official MTA status page before traveling.' });
+    }
+  });
   app.get('/api/stations/:stationId/elevators', async (req, res, next) => {
     try {
       get_station_accessibility({ stationId: req.params.stationId });

@@ -9,4 +9,4 @@
   <symbol id="source" viewBox="0 0 24 24"><path d="M5 3h14v18H5zM8 7h8M8 11h8M8 15h5"/></symbol>
   <symbol id="vision" viewBox="0 0 24 24"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></symbol>
   <symbol id="hearing" viewBox="0 0 24 24"><path d="M5 10a7 7 0 0 1 14 0c0 4-4 4-5 7-1 4-6 4-7 0M9 10a3 3 0 0 1 6 0c0 2-3 2-3 4"/></symbol>
-</svg>
+<symbol id="train" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="17" rx="3"/><path d="M5 11h14M12 3v8M8 19l-2 3M16 19l2 3"/><circle cx="8.5" cy="15" r=".7"/><circle cx="15.5" cy="15" r=".7"/></symbol><symbol id="escalator" viewBox="0 0 24 24"><path d="M2 18h5l9-12h6v4h-4L9 22H2zM3 9h5l4-5"/><circle cx="7" cy="4" r="2"/></symbol></svg>

@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import { z } from 'zod';
 
 export const dataset = JSON.parse(readFileSync(new URL('../data/stations.json', import.meta.url), 'utf8'));
-const boroughs = ['All', 'Manhattan', 'Bronx', 'Brooklyn', 'Queens'];
+const boroughs = ['All', 'Manhattan', 'Bronx', 'Brooklyn', 'Queens', 'Staten Island'];
 export const searchInput = z.object({ query: z.string().trim().max(120).default(''), borough: z.enum(boroughs).default('All') }).strict();
 export const stationInput = z.object({ stationId: z.string().trim().min(1).max(80) }).strict();
 const normalize = text => text.toLowerCase().normalize('NFKD').replace(/[–—-]/g, ' ').replace(/[^a-z0-9 ]/g, '').replace(/\s+/g, ' ').trim();

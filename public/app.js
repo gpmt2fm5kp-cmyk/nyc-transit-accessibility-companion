@@ -10,15 +10,26 @@ function icon(name) {
   use.setAttribute('href', `/icons.svg#${name}`); svg.append(use); return svg;
 }
 for (const slot of document.querySelectorAll('[data-icon]')) slot.append(icon(slot.dataset.icon));
+const featureCloseTimers = new WeakMap();
+function showFeaturePanel(panel, visible) {
+  clearTimeout(featureCloseTimers.get(panel));
+  panel.classList.remove('is-closing');
+  if(visible){panel.hidden=false;return;}
+  if(panel.hidden || matchMedia('(prefers-reduced-motion: reduce)').matches){panel.hidden=true;return;}
+  panel.classList.add('is-closing');
+  featureCloseTimers.set(panel,setTimeout(()=>{panel.hidden=true;panel.classList.remove('is-closing');},120));
+}
 function selectFeature(feature) {
   const active = document.querySelector(`[data-feature="${feature}"]`);
   const opening = active?.getAttribute('aria-expanded') !== 'true';
   for (const button of document.querySelectorAll('[data-feature]')) button.setAttribute('aria-expanded', String(opening && button === active));
-  $('#step-free-panel').hidden = !opening || feature !== 'step-free';
-  $('#coming-soon-panel').hidden = !opening || feature === 'step-free';
-  if (opening && feature !== 'step-free') $('#coming-soon-title').textContent = {vision:'Vision support',hearing:'Hearing support',entrances:'Station entrances'}[feature];
+  showFeaturePanel($('#step-free-panel'), opening && feature === 'step-free');
+  showFeaturePanel($('#equipment-panel'), opening && feature === 'equipment');
+  showFeaturePanel($('#coming-soon-panel'), opening && !['step-free','equipment'].includes(feature));
+  if (opening && !['step-free','equipment'].includes(feature)) $('#coming-soon-title').textContent = {vision:'Vision support',hearing:'Hearing support',equipment:'Elevators & escalators'}[feature];
 }
 for (const button of document.querySelectorAll('[data-feature]')) button.addEventListener('click', () => selectFeature(button.dataset.feature));
+function stationDisplayName(station) { return station.stationId === '151' ? '145 St' : station.stationName; }
 function routes(services, limit = services.length) {
   const container = element('span', undefined, 'routes');
   for (const service of services.slice(0, limit)) { const badge = element('span', service, `route ${groupColors[service] || ''}`); badge.setAttribute('aria-label', `Line ${service}`); container.append(badge); }
@@ -62,11 +73,11 @@ function renderStations() {
     button.type = 'button';
     button.dataset.stationId = station.stationId;
     button.setAttribute('aria-current', String(state.record?.station.stationId === station.stationId));
-    button.setAttribute('aria-label', `${station.stationName}, lines ${station.services.join(', ')}, ${station.borough}. ${classifications[station.classification]}.`);
+    button.setAttribute('aria-label', `${stationDisplayName(station)}, lines ${station.services.join(', ')}, ${station.borough}. ${classifications[station.classification]}.`);
     const sub = element('span', undefined, 'station-subline'); sub.append(routes(station.services, 4), element('span', station.borough));
     const access = element('span', undefined, 'station-access-status');
-    access.append(icon(station.classification==='not_accessible'?'no-access':'wheelchair'), element('span', { fully_accessible: 'Step-free access listed', partially_accessible: 'Limited step-free access', not_accessible: 'No step-free access listed', unknown: 'Access not confirmed' }[station.classification]));
-    button.append(element('strong', station.stationName), sub, access);
+    access.append(icon(station.classification==='not_accessible'?'no-access':'wheelchair'), element('span', { fully_accessible: 'Wheelchair-accessible · per MTA', partially_accessible: 'Limited wheelchair access', not_accessible: 'Not wheelchair-accessible · per MTA', unknown: 'Wheelchair access not confirmed' }[station.classification]));
+    button.append(element('strong', stationDisplayName(station)), sub, access);
     button.addEventListener('click', () => selectStation(station.stationId, true));
     $('#station-list').append(button);
   }
@@ -101,11 +112,12 @@ function resetConversation() {
 }
 function renderRecord() {
   const record=state.record;
-  $('#station-name').textContent=record.station.stationName;
+  $('#station-name').textContent=stationDisplayName(record.station);
   $('#station-routes').replaceChildren(routes(record.station.services));
   $('#station-borough').textContent=record.station.borough;
-  $('#station-access-brief').textContent={fully_accessible:'Step-free access listed · check elevator updates below',partially_accessible:'Limited step-free access · restrictions vary by service or direction',not_accessible:'No step-free access listed in the station reference',unknown:'Step-free access not confirmed'}[record.adaClassification];
-  $('#access-label').textContent={fully_accessible:'Listed in MTA reference',partially_accessible:'Limited — see restrictions',not_accessible:'Not listed in MTA reference',unknown:'Not confirmed'}[record.adaClassification];
+  $('#staten-island-note').hidden=record.station.borough!=='Staten Island';
+  $('#station-access-brief').textContent={fully_accessible:'Wheelchair-accessible — per MTA. Equipment reports are a separate check.',partially_accessible:'Limited wheelchair access — check platforms and directions.',not_accessible:'Not wheelchair-accessible — per MTA.',unknown:'Wheelchair access not confirmed.'}[record.adaClassification];
+  $('#access-label').textContent={fully_accessible:'Wheelchair-accessible — per MTA',partially_accessible:'Limited wheelchair access',not_accessible:'Not wheelchair-accessible — per MTA',unknown:'Wheelchair access not confirmed'}[record.adaClassification];
   $('#access-summary').dataset.access=record.adaClassification;
   $('.access-summary-icon').replaceChildren(icon(record.adaClassification==='not_accessible'?'no-access':'wheelchair'));
   $('#access-description').textContent=record.adaClassification==='not_accessible'
@@ -114,20 +126,20 @@ function renderRecord() {
       ? 'Access depends on your service or direction.'
       : 'Use the documented entrance below.';
   const entrances=$('#entrance-content'); entrances.replaceChildren();
-  if (!record.entrances.length) entrances.append(element('p','No step-free entrance listed in our reference.'));
+  if (!record.entrances.length) entrances.append(element('p','No wheelchair-accessible entrance listed in our reference.'));
   else {
     const list=element('ul',undefined,'entrance-list');
     for (const entrance of record.entrances) list.append(element('li',entrance.locationDescription));
     entrances.append(list);
   }
   const quickPlatforms=$('#quick-platform-content');quickPlatforms.replaceChildren();
-  if(record.adaClassification==='fully_accessible') quickPlatforms.append(element('p','Step-free platforms listed.'));
-  else if(record.adaClassification==='not_accessible') quickPlatforms.append(element('p','No step-free platforms listed.'));
+  if(record.adaClassification==='fully_accessible') quickPlatforms.append(element('p','Wheelchair-accessible platforms listed.'));
+  else if(record.adaClassification==='not_accessible') quickPlatforms.append(element('p','No wheelchair-accessible platforms listed.'));
   else {
     const unrestricted=[...new Set(record.platforms.filter(p=>p.classification==='fully_accessible').flatMap(p=>p.services))];
     if(unrestricted.length) quickPlatforms.append(element('p',`${unrestricted.join(' / ')} · access listed`));
     for(const platform of record.platforms.filter(p=>p.classification!=='fully_accessible')) {
-      const note=platform.classification==='not_accessible'?'no step-free access listed':platform.notes || 'direction restrictions; see details';
+      const note=platform.classification==='not_accessible'?'no wheelchair access listed':platform.notes || 'direction restrictions; see details';
       quickPlatforms.append(element('p',`${platform.services.join(' / ')} · ${note}`));
     }
   }
@@ -137,6 +149,7 @@ function renderRecord() {
     '606':'E / F: Manhattan-bound access only.'
   };
   const restriction=restrictions[record.station.stationId];
+  $('#station-restriction-brief').textContent=restriction || ''; $('#station-restriction-brief').hidden=!restriction;
   $('#quick-restriction').textContent=restriction || '';
   $('#quick-restriction').hidden=!restriction;
   const platformContent=$('#platform-content'); platformContent.replaceChildren();
@@ -144,11 +157,11 @@ function renderRecord() {
   for (const platform of record.platforms) {
     const section=element('section',undefined,'platform-record');
     section.append(element('h4',`${platform.name} · ${platform.services.join(' / ')}`));
-    const classification = element('p', {fully_accessible:'Step-free access listed',partially_accessible:'Direction restriction — check below',not_accessible:'No step-free platform access listed',unknown:'Platform access not confirmed'}[platform.classification], 'platform-access-label');
+    const classification = element('p', {fully_accessible:'Wheelchair access listed',partially_accessible:'Direction restriction — check below',not_accessible:'No wheelchair-accessible platform listed',unknown:'Platform access not confirmed'}[platform.classification], 'platform-access-label');
     section.append(classification);
     for (const direction of platform.directions) {
       const row=element('p',undefined,'direction-row');
-      row.append(element('span',`${direction.label==='Last Stop'?'Terminal platform':direction.label}: `,'direction-label'),document.createTextNode({yes:'step-free access listed',no:'no step-free access listed',unknown:'access not confirmed'}[direction.stepFree]));
+      row.append(element('span',`${direction.label==='Last Stop'?'Terminal platform':direction.label}: `,'direction-label'),document.createTextNode({yes:'wheelchair access listed',no:'no wheelchair access listed',unknown:'access not confirmed'}[direction.stepFree]));
       section.append(row);
     }
     if(platform.notes) section.append(element('p',platform.notes));
@@ -164,15 +177,16 @@ function renderRecord() {
   $('#snapshot-caption').textContent=`Reference checked ${date(record.snapshotVerifiedAt)} · Elevator reports checked separately · Station reference is not automatically refreshed`;
   for (const button of document.querySelectorAll('.station-button')) button.setAttribute('aria-current',String(button.dataset.stationId===record.station.stationId));
   $('#station-detail').setAttribute('aria-busy','false');
+
 }
 async function selectStation(stationId, focus=false) {
   const version=++state.selectVersion;
   $('#station-detail').setAttribute('aria-busy','true');
   resetConversation();
   for (const button of document.querySelectorAll('[data-feature]')) button.setAttribute('aria-expanded','false');
-  $('#step-free-panel').hidden=true; $('#coming-soon-panel').hidden=true;
+  $('#step-free-panel').hidden=true; $('#equipment-panel').hidden=true; $('#coming-soon-panel').hidden=true;
   state.record=null;
-  elevatorVersion++; $('#elevator-summary').textContent='Choose a station to check its elevators.'; $('#elevator-checked').textContent=''; $('#elevator-reports').replaceChildren();
+  elevatorVersion++; directoryVersion++; $('#equipment-brief').textContent='Checking MTA equipment reports…'; $('#equipment-brief').classList.remove('has-outage'); $('#elevator-summary').textContent='Choose a station to check its elevators.'; $('#elevator-checked').textContent=''; $('#elevator-reports').replaceChildren();
   state.mode='snapshot';renderMode();
   for(const details of document.querySelectorAll('.access-section'))details.open=false;
   try {
@@ -186,35 +200,7 @@ async function selectStation(stationId, focus=false) {
 }
 let elevatorVersion = 0;
 async function refreshElevators() {
-  if (!state.record) return;
-  const stationId=state.record.station.stationId, version=++elevatorVersion;
-  const button=$('#refresh-elevators'); button.disabled=true; button.textContent='Checking…';
-  $('#elevator-summary').textContent='Checking MTA elevator reports…';
-  $('#elevator-checked').textContent=''; $('#elevator-reports').replaceChildren();
-  try {
-    const result=await request(`/api/stations/${encodeURIComponent(stationId)}/elevators`);
-    if(version!==elevatorVersion || state.record?.station.stationId!==stationId) return;
-    $('#elevator-summary').textContent=!result.elevatorCount ? 'No active passenger elevators listed for this station in MTA’s equipment feed.' : result.outages.length ? `${result.outages.length} elevator outage report${result.outages.length===1?'':'s'} · ${result.elevatorCount} elevators listed` : `No elevator outages reported · ${result.elevatorCount} elevators listed`;
-    const time=new Intl.DateTimeFormat('en-US',{month:'short',day:'numeric',hour:'numeric',minute:'2-digit',timeZone:'America/New_York',timeZoneName:'short'}).format(new Date(result.checkedAt));
-    $('#elevator-checked').textContent=`MTA feeds checked ${time}. Auto-check every 5 minutes while this page is visible.`;
-    for(const [title,reports] of [['Reported outages',result.outages],['Planned outages',result.planned]]) {
-      if(!reports.length) continue;
-      const details=element('details',undefined,'equipment-disclosure'); details.open=title==='Reported outages';
-      details.append(element('summary',`${title} (${reports.length})`));
-      for(const report of reports) {
-        const item=element('div',undefined,'equipment-report');
-        item.append(element('strong',`${report.equipmentId} · ${report.reason}`),element('p',report.serving));
-        if(report.startsAt) item.append(element('p',`MTA start: ${report.startsAt} (New York time)`));
-        if(report.estimatedReturn) item.append(element('p',`Estimated return: ${report.estimatedReturn} (New York time; may change)`));
-        details.append(item);
-      }
-      $('#elevator-reports').append(details);
-    }
-  } catch(error) {
-    if(version===elevatorVersion && state.record?.station.stationId===stationId) $('#elevator-summary').textContent=error.message;
-  } finally {
-    if(version===elevatorVersion){button.disabled=false;button.textContent='Refresh status';}
-  }
+  if(state.record) await loadDirectory(state.record.station.stationId);
 }
 $('#refresh-elevators').addEventListener('click',refreshElevators);
 setInterval(()=>{if(!document.hidden)refreshElevators();},300_000);
@@ -264,6 +250,84 @@ async function initialize(){
   const requested=new URLSearchParams(location.search).get('station');
   const first=state.stations.find(s=>s.stationId===requested)||state.stations[0];
   if(first)await selectStation(first.stationId);
-  try{const health=await request('/api/health');state.aiConfigured=health.aiConfigured;$('#ai-status').textContent=health.aiConfigured?'AI guide ready':'AI guide not connected yet. Station cards are available.';$('#ai-status').classList.toggle('connected',health.aiConfigured);}catch{$('#ai-status').textContent='Guide connection unavailable. Try refreshing.';}
+  try{const health=await request('/api/health');state.aiConfigured=health.aiConfigured;$('#ai-status').textContent=health.aiConfigured?'AI guide ready':'The AI guide is temporarily unavailable. Station information is still available.';$('#ai-status').classList.toggle('connected',health.aiConfigured);}catch{$('#ai-status').textContent='Guide connection unavailable. Try refreshing.';}
 }
 initialize();
+
+let directoryItems=[],directoryType='EL',directoryExpanded=false,directoryVersion=0;
+function renderDirectory(){
+ const rows=directoryItems.filter(r=>r.type===directoryType).sort((a,b)=>Number(/street|corner|entrance/i.test(b.serving))-Number(/street|corner|entrance/i.test(a.serving)) || a.id.localeCompare(b.id));
+ $('#elevators-count').textContent=directoryItems.filter(r=>r.type==='EL').length;
+ $('#escalators-count').textContent=directoryItems.filter(r=>r.type==='ES').length;
+ $('#elevators-tab').setAttribute('aria-pressed',String(directoryType==='EL'));
+ $('#escalators-tab').setAttribute('aria-pressed',String(directoryType==='ES'));
+ $('#directory-title').textContent=directoryType==='EL'?'Find your elevator.':'Find your escalator.';
+ $('#directory-items').replaceChildren();
+ for(const row of (directoryExpanded?rows:rows.slice(0,3))){
+  const item=element('details',undefined,'directory-item');
+  const summary=element('summary');
+  const marker=element('span',undefined,'equipment-marker');marker.append(icon(directoryType==='EL'?'elevator':'escalator'));
+  const words=element('span',undefined,'equipment-words');words.append(element('strong',row.short||row.serving),element('span',`${row.id} · ${row.lines||row.station}`));
+  summary.append(marker,words,element('span',row.outage?'Outage reported':'No outage reported',`equipment-status${row.outage?' has-outage':''}`),element('span','＋','equipment-expand'));
+  const body=element('div',undefined,'equipment-location');body.append(element('p',row.serving),element('p','Location description from MTA. No outage report does not guarantee equipment is working.'));
+  item.append(summary,body);$('#directory-items').append(item);
+ }
+ if(!rows.length)$('#directory-items').append(element('p','No matching equipment entries in this feed. This does not establish whether elevators or escalators are present. Check the official station reference.','directory-note'));
+ $('#directory-more').hidden=rows.length<=3;
+ $('#directory-more').textContent=directoryExpanded?'Show fewer ↑':`View all ${rows.length} ${directoryType==='EL'?'elevators':'escalators'} →`;
+}
+async function loadDirectory(id){
+ const version=++directoryVersion, button=$('#refresh-elevators');
+ button.disabled=true;button.textContent='Checking…';
+ $('#directory-note').textContent='Checking MTA locations and reports…';
+ try{
+  const data=await request(`/api/stations/${encodeURIComponent(id)}/equipment`);
+  if(version!==directoryVersion || state.record?.station.stationId!==id)return;
+  directoryItems=data.items;renderDirectory();
+  const time=new Intl.DateTimeFormat('en-US',{month:'short',day:'numeric',hour:'numeric',minute:'2-digit',timeZone:'America/New_York',timeZoneName:'short'}).format(new Date(data.checkedAt));
+  const el=directoryItems.filter(r=>r.type==='EL'), es=directoryItems.filter(r=>r.type==='ES');
+  const brokenEl=el.filter(r=>r.outage).length, brokenEs=es.filter(r=>r.outage).length;
+  $('#equipment-brief').textContent=brokenEl || brokenEs ? `${brokenEl} elevator · ${brokenEs} escalator outage reports — view details →` : directoryItems.length ? 'No equipment outages reported · view locations →' : 'Live equipment status not confirmed here · view details →';
+  $('#equipment-brief').classList.toggle('has-outage',Boolean(brokenEl || brokenEs));
+  $('#directory-note').textContent=`Locations & reports checked ${time}. Open a row for its location.`;
+  $('#elevator-summary').textContent=directoryItems.length ? `${brokenEl} elevator and ${brokenEs} escalator outage reports · ${el.length} elevators / ${es.length} escalators matched` : 'No equipment matched this station in the feed. Current equipment status is not confirmed; use the official station reference.';
+  $('#elevator-checked').textContent=`MTA feeds checked ${time}. Both tabs auto-check every 5 minutes while this page is visible.`;
+  $('#elevator-reports').replaceChildren();
+  for(const upcoming of [false,true]){
+   const reports=directoryItems.flatMap(item=>(item.reports||[]).filter(report=>report.upcoming===upcoming).map(report=>({...report,id:item.id})));
+   if(!reports.length)continue;
+   const details=element('details',undefined,'equipment-disclosure');
+   details.append(element('summary',`${upcoming?'Planned work':'Reported outages'} (${reports.length})`));
+   for(const report of reports){
+    const item=element('div',undefined,'equipment-report');
+    item.append(element('strong',`${report.id} · ${report.reason || 'Reason not supplied'}`),element('p',report.serving || 'Location not supplied'));
+    if(report.startsAt)item.append(element('p',`MTA start: ${report.startsAt} (New York time)`));
+    if(report.estimatedReturn)item.append(element('p',`Estimated return: ${report.estimatedReturn} (New York time; may change)`));
+    details.append(item);
+   }
+   $('#elevator-reports').append(details);
+  }
+ }catch(error){
+  if(version!==directoryVersion || state.record?.station.stationId!==id)return;
+  $('#equipment-brief').textContent='Equipment updates unavailable — check MTA →';
+  $('#equipment-brief').classList.add('has-outage');$('#directory-note').textContent=error.message;
+  $('#elevator-summary').textContent=error.message;$('#elevator-checked').textContent='No fresh check available. Locations below may be from an earlier check.';
+  $('#elevator-reports').replaceChildren();
+ }finally{if(version===directoryVersion){button.disabled=false;button.textContent='Refresh equipment';}}
+}
+$('#equipment-brief').addEventListener('click',()=>{
+ if($('#equipment-panel').hidden)selectFeature('equipment');
+ $('#equipment-title').tabIndex=-1;$('#equipment-title').focus({preventScroll:true});
+ $('#equipment-panel').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'start'});
+});
+for(const button of document.querySelectorAll('[data-close-feature]'))button.addEventListener('click',()=>{
+ selectFeature(button.dataset.closeFeature);
+ const target=document.querySelector(`[data-feature="${button.dataset.closeFeature}"]`);target.focus({preventScroll:true});
+ document.querySelector('.feature-grid').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'center'});
+});
+$('#view-equipment').addEventListener('click',()=>selectFeature('equipment'));
+$('#feedback-info').addEventListener('click',()=>$('#feedback-dialog').showModal());
+$('#close-feedback').addEventListener('click',()=>$('#feedback-dialog').close());
+$('#elevators-tab').addEventListener('click',()=>{directoryType='EL';directoryExpanded=false;renderDirectory();});
+$('#escalators-tab').addEventListener('click',()=>{directoryType='ES';directoryExpanded=false;renderDirectory();});
+$('#directory-more').addEventListener('click',()=>{directoryExpanded=!directoryExpanded;renderDirectory();});

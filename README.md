@@ -4,7 +4,7 @@ NYC subway accessibility, explained in plain language. A solo AI Community Sprin
 
 ## What works
 
-- Search 12 selected station locations/complexes by name, line or borough.
+- Search 15 selected station locations/complexes by name, line or any of the five boroughs.
 - Read independently usable station cards, documented entrance locations, service/direction flags, sources and dates.
 - Switch between light mode and the approved near-black dark mode. Only the appearance preference persists on the device.
 - Ask Gemini about the selected record through a server-side API. Request and response validation use Zod. Cards stay available if AI is unavailable.
@@ -37,19 +37,19 @@ No database, Unsplash account or image key is needed for this MVP. No keys are i
 
 `data/stations.json` contains a dated reference snapshot checked against [MTA Subway Stations on NY Open Data](https://data.ny.gov/Transportation/MTA-Subway-Stations/39hk-dx4f) and the [MTA accessible-station reference](https://www.mta.info/accessibility/stations). Each record carries original station/complex/platform identifiers and provenance dates. `sourceUpdatedAt` belongs to the source; `snapshotVerifiedAt` is the real source-check time. Neither confirms equipment operation.
 
-Coverage: 34 St–Hudson Yards; 145 St serving A/C/B/D; Times Sq–42 St (including its Port Authority connection restrictions); West Farms Sq–E Tremont Av; 149 St–Hostos (the proposed Grand Concourse location); 161 St–Yankee Stadium; Atlantic Av–Barclays Ctr; Jay St–MetroTech; Borough Hall/Court St; Jackson Hts/74 St–Broadway; Court Sq/Court Sq–23 St; Queensboro Plaza.
+Coverage: 34 St–Hudson Yards; 145 St serving A/C/B/D; Times Sq–42 St (including its Port Authority connection restrictions); West Farms Sq–E Tremont Av; 149 St–Hostos (the proposed Grand Concourse location); 161 St–Yankee Stadium; Atlantic Av–Barclays Ctr; Jay St–MetroTech; Borough Hall/Court St; Jackson Hts/74 St–Broadway; Court Sq/Court Sq–23 St; Queensboro Plaza; St. George; New Dorp; Tottenville (the final three are Staten Island Railway).
 
 West Farms Sq and 145 St are not listed ADA accessible in the checked data. Court Sq and Borough Hall/Court St retain service and direction restrictions. The app must never imply that every station or transfer is accessible.
 
-**Station reference plus MTA elevator reports; not a route planner.** `/api/stations/:stationId/elevators` joins MTA equipment and outage feeds by exact station complex and equipment IDs. It shows current reports and separately labeled upcoming work, the fetch timestamp, and the official MTA link. Successful feeds are cached up to one minute; the page checks on station selection, manual refresh, and every five minutes while visible. Feed failures remain unknown, and no reports never means guaranteed elevator operation. Station reference data, closures, opening hours, and current train service are not automatically refreshed. The AI guide reads the station reference only and directs current-condition questions to the separate status panel. No complete step-free journey is guaranteed. Entrance entry/exit fields remain unknown when the source does not establish them.
+**Station reference plus MTA elevator and escalator reports; not a route planner.** `/api/stations/:stationId/equipment` joins MTA equipment and outage feeds by exact station complex and equipment IDs. It includes equipment locations and serves both tabs from one timestamp. It shows current reports and separately labeled upcoming work, the fetch timestamp, and the official MTA link. Successful feeds are cached up to one minute; the page checks on station selection, manual refresh, and every five minutes while visible. Feed failures and stations with no matching equipment remain unknown (particularly important for Staten Island coverage), and no reports never means guaranteed elevator operation. Station reference data, closures, opening hours, and current train service are not automatically refreshed. The AI guide reads the station reference only and directs current-condition questions to the separate status panel. No complete step-free journey is guaranteed. Entrance entry/exit fields remain unknown when the source does not establish them.
 
-Automatic refresh is **not implemented**. `pnpm data:review` compares source flags read-only; it does not update records, stamp a verification date or refresh entrance notes. A future daily process needs validation and durable storage or an automated reviewed data update/redeploy. Failed checks must retain the prior dated snapshot.
+Automatic **station-reference** refresh is not implemented. `pnpm data:review` compares source flags read-only; it does not update records, stamp a verification date or refresh entrance notes. A future daily process needs validation and durable storage or an automated reviewed data update/redeploy. Failed checks must retain the prior dated snapshot.
 
 ## AI and tools
 
 `system.md` supplies the actual runtime system prompt. `src/station-tools.js` implements `search_stations` and `get_station_accessibility`. The search endpoint invokes the first; station selection and the question endpoint invoke the second. The server chooses these read-only tools deterministically; this MVP does not use an autonomous model tool-calling loop. `tool-definitions.json` documents the inputs/outputs.
 
-The selected source record and server-created demonstration mode are passed to Gemini. A question cannot submit its own source record. Replies follow `{ answer, canConfirm, nextStep }`. The server validates replies and adds its own not-checked/demo disclosure. `canConfirm` concerns the specific dated-reference claim, not model confidence or a travel-safety guarantee. Sample mode always returns false. Model output still requires testing and can be wrong; source cards remain the reference.
+The selected source record and server-created demonstration mode are passed to Gemini. A question cannot submit its own source record. Replies follow `{ answer, canConfirm, nextStep }`. The server validates replies and adds its own reference-only/demo disclosure. `canConfirm` concerns the specific dated-reference claim, not model confidence or a travel-safety guarantee. Sample mode always returns false. Model output still requires testing and can be wrong; source cards remain the reference.
 
 Questions are limited to 600 characters; at most six history entries are passed, held only in page memory. Changing stations or modes clears the conversation, and stale responses cannot appear under a different station. The app does not deliberately persist/log questions. Hosting and Google may process request metadata/content under their policies; do not enter personal information.
 
@@ -70,3 +70,9 @@ The original teacher-provided setup and demo checklists remain unchanged in the 
 ## Identity
 
 Original AG route-line SVG; no copied MTA map or logo. Service identifiers use independently styled rectangular labels with familiar transit colors, not imported official artwork. An independent class project, not affiliated with or endorsed by MTA. Review [MTA licensing guidance](https://www.mta.info/developers) before using official maps/symbols in wider publication.
+
+## Approved interface
+
+The station card starts with an access conclusion, important restrictions, four feature choices, and the AI question area. Wheelchair access and equipment details open on demand; vision and hearing support remain explicitly marked Coming soon. One outlined Close details control returns focus to its feature button. Reduced-motion users skip the brief opening/closing transition. All 15 stations retain source dates; the three Staten Island entries were checked against the official station dataset and entrance reference on Nov 12, 2026. Ferry operations are a separate NYC DOT service and are not included in railway status.
+
+App feedback currently displays `feedback@accessgranted.example`, explicitly labeled as an inactive placeholder. It has no mailto link and collects no messages. The source planning document preserves the teacher’s checklist and historical plan; it is not evidence that real-user testing or presentation submissions have been completed.

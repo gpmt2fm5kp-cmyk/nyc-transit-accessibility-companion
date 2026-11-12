@@ -1,7 +1,7 @@
 {
   "verifiedAt": "2026-11-12T00:16:56.399774+00:00",
   "sourceUpdatedAt": "2026-11-11T05:20:07+00:00",
-  "coverageNote": "12 selected station locations and complexes across Manhattan, the Bronx, Brooklyn and Queens. Service lists are reference data, not today\u2019s service schedule.",
+  "coverageNote": "15 selected station locations and complexes across all five NYC boroughs, including Staten Island Railway. Ferry service is separate and not checked. Service lists are reference data, not today\u2019s service schedule.",
   "records": [
     {
       "station": {
@@ -1387,6 +1387,287 @@
           "title": "MTA accessible-station entrance reference",
           "sourceUpdatedAt": "2026-10-12",
           "verifiedAt": "2026-11-12T00:16:56.399774+00:00"
+        }
+      ]
+    },
+    {
+      "station": {
+        "stationId": "510",
+        "stationName": "New Dorp",
+        "borough": "Staten Island",
+        "services": [
+          "SIR"
+        ]
+      },
+      "aliases": [
+        "New Dorp",
+        "Staten Island Railway"
+      ],
+      "adaClassification": "fully_accessible",
+      "directionNotes": "Railway reference only. Ferry access and operating conditions require a separate check with NYC DOT.",
+      "entrances": [
+        {
+          "entranceId": "510-reference-1",
+          "locationDescription": "St. George-bound: elevator near the southwest corner of New Dorp Lane and New Dorp Plaza.",
+          "stepFree": "yes",
+          "entryAllowed": null,
+          "exitAllowed": null,
+          "services": [
+            "SIR"
+          ],
+          "directionNotes": "Reference description; current operation is checked separately.",
+          "sources": [
+            {
+              "url": "https://www.mta.info/accessibility/stations",
+              "title": "MTA accessible-station entrance reference",
+              "sourceUpdatedAt": "2026-10-12",
+              "verifiedAt": "2026-11-12T06:02:15.229402+00:00"
+            }
+          ]
+        },
+        {
+          "entranceId": "510-reference-2",
+          "locationDescription": "Tottenville-bound: elevator near the southeast corner of New Dorp Lane and New Dorp Plaza.",
+          "stepFree": "yes",
+          "entryAllowed": null,
+          "exitAllowed": null,
+          "services": [
+            "SIR"
+          ],
+          "directionNotes": "Reference description; current operation is checked separately.",
+          "sources": [
+            {
+              "url": "https://www.mta.info/accessibility/stations",
+              "title": "MTA accessible-station entrance reference",
+              "sourceUpdatedAt": "2026-10-12",
+              "verifiedAt": "2026-11-12T06:02:15.229402+00:00"
+            }
+          ]
+        }
+      ],
+      "platforms": [
+        {
+          "id": "S22",
+          "name": "New Dorp",
+          "services": [
+            "SIR"
+          ],
+          "classification": "fully_accessible",
+          "directions": [
+            {
+              "label": "Ferry",
+              "stepFree": "yes"
+            },
+            {
+              "label": "South Shore",
+              "stepFree": "yes"
+            }
+          ],
+          "notes": ""
+        }
+      ],
+      "platformNotes": [],
+      "equipmentNotes": [
+        "Use MTA reports for equipment conditions."
+      ],
+      "currentElevatorStatus": "not_checked",
+      "officialStatusUrl": "https://www.mta.info/elevator-escalator-status",
+      "snapshotVerifiedAt": "2026-11-12T06:02:15.229402+00:00",
+      "lastSuccessfulRefreshAt": null,
+      "refreshState": "not_implemented",
+      "sources": [
+        {
+          "url": "https://data.ny.gov/Transportation/MTA-Subway-Stations/39hk-dx4f",
+          "title": "MTA Subway Stations \u00b7 NY Open Data",
+          "sourceUpdatedAt": "2026-11-11T05:20:07+00:00",
+          "verifiedAt": "2026-11-12T06:02:15.229402+00:00"
+        },
+        {
+          "url": "https://www.mta.info/accessibility/stations",
+          "title": "MTA accessible-station entrance reference",
+          "sourceUpdatedAt": "2026-10-12",
+          "verifiedAt": "2026-11-12T06:02:15.229402+00:00"
+        }
+      ]
+    },
+    {
+      "station": {
+        "stationId": "522",
+        "stationName": "Tottenville",
+        "borough": "Staten Island",
+        "services": [
+          "SIR"
+        ]
+      },
+      "aliases": [
+        "Tottenville",
+        "Staten Island Railway"
+      ],
+      "adaClassification": "fully_accessible",
+      "directionNotes": "Railway reference only. Ferry access and operating conditions require a separate check with NYC DOT.",
+      "entrances": [
+        {
+          "entranceId": "522-reference-1",
+          "locationDescription": "Ramp on the south side of the station.",
+          "stepFree": "yes",
+          "entryAllowed": null,
+          "exitAllowed": null,
+          "services": [
+            "SIR"
+          ],
+          "directionNotes": "Reference description; current operation is checked separately.",
+          "sources": [
+            {
+              "url": "https://www.mta.info/accessibility/stations",
+              "title": "MTA accessible-station entrance reference",
+              "sourceUpdatedAt": "2026-10-12",
+              "verifiedAt": "2026-11-12T06:02:15.229402+00:00"
+            }
+          ]
+        }
+      ],
+      "platforms": [
+        {
+          "id": "S09",
+          "name": "Tottenville",
+          "services": [
+            "SIR"
+          ],
+          "classification": "fully_accessible",
+          "directions": [
+            {
+              "label": "Ferry",
+              "stepFree": "yes"
+            },
+            {
+              "label": "Last Stop",
+              "stepFree": "yes"
+            }
+          ],
+          "notes": ""
+        }
+      ],
+      "platformNotes": [],
+      "equipmentNotes": [
+        "Use MTA reports for equipment conditions."
+      ],
+      "currentElevatorStatus": "not_checked",
+      "officialStatusUrl": "https://www.mta.info/elevator-escalator-status",
+      "snapshotVerifiedAt": "2026-11-12T06:02:15.229402+00:00",
+      "lastSuccessfulRefreshAt": null,
+      "refreshState": "not_implemented",
+      "sources": [
+        {
+          "url": "https://data.ny.gov/Transportation/MTA-Subway-Stations/39hk-dx4f",
+          "title": "MTA Subway Stations \u00b7 NY Open Data",
+          "sourceUpdatedAt": "2026-11-11T05:20:07+00:00",
+          "verifiedAt": "2026-11-12T06:02:15.229402+00:00"
+        },
+        {
+          "url": "https://www.mta.info/accessibility/stations",
+          "title": "MTA accessible-station entrance reference",
+          "sourceUpdatedAt": "2026-10-12",
+          "verifiedAt": "2026-11-12T06:02:15.229402+00:00"
+        }
+      ]
+    },
+    {
+      "station": {
+        "stationId": "501",
+        "stationName": "St. George",
+        "borough": "Staten Island",
+        "services": [
+          "SIR"
+        ]
+      },
+      "aliases": [
+        "St George",
+        "Staten Island Railway"
+      ],
+      "adaClassification": "fully_accessible",
+      "directionNotes": "Railway reference only. Ferry access and operating conditions require a separate check with NYC DOT.",
+      "entrances": [
+        {
+          "entranceId": "501-reference-1",
+          "locationDescription": "North-side elevator connects the bus/taxi, ferry and railway levels.",
+          "stepFree": "yes",
+          "entryAllowed": null,
+          "exitAllowed": null,
+          "services": [
+            "SIR"
+          ],
+          "directionNotes": "Reference description; current operation is checked separately.",
+          "sources": [
+            {
+              "url": "https://www.mta.info/accessibility/stations",
+              "title": "MTA accessible-station entrance reference",
+              "sourceUpdatedAt": "2026-10-12",
+              "verifiedAt": "2026-11-12T06:02:15.229402+00:00"
+            }
+          ]
+        },
+        {
+          "entranceId": "501-reference-2",
+          "locationDescription": "South-side elevator connects passenger drop-off and ferry levels.",
+          "stepFree": "yes",
+          "entryAllowed": null,
+          "exitAllowed": null,
+          "services": [
+            "SIR"
+          ],
+          "directionNotes": "Reference description; current operation is checked separately.",
+          "sources": [
+            {
+              "url": "https://www.mta.info/accessibility/stations",
+              "title": "MTA accessible-station entrance reference",
+              "sourceUpdatedAt": "2026-10-12",
+              "verifiedAt": "2026-11-12T06:02:15.229402+00:00"
+            }
+          ]
+        }
+      ],
+      "platforms": [
+        {
+          "id": "S31",
+          "name": "St George",
+          "services": [
+            "SIR"
+          ],
+          "classification": "fully_accessible",
+          "directions": [
+            {
+              "label": "Last Stop",
+              "stepFree": "yes"
+            },
+            {
+              "label": "South Shore",
+              "stepFree": "yes"
+            }
+          ],
+          "notes": ""
+        }
+      ],
+      "platformNotes": [],
+      "equipmentNotes": [
+        "Use MTA reports for equipment conditions."
+      ],
+      "currentElevatorStatus": "not_checked",
+      "officialStatusUrl": "https://www.mta.info/elevator-escalator-status",
+      "snapshotVerifiedAt": "2026-11-12T06:02:15.229402+00:00",
+      "lastSuccessfulRefreshAt": null,
+      "refreshState": "not_implemented",
+      "sources": [
+        {
+          "url": "https://data.ny.gov/Transportation/MTA-Subway-Stations/39hk-dx4f",
+          "title": "MTA Subway Stations \u00b7 NY Open Data",
+          "sourceUpdatedAt": "2026-11-11T05:20:07+00:00",
+          "verifiedAt": "2026-11-12T06:02:15.229402+00:00"
+        },
+        {
+          "url": "https://www.mta.info/accessibility/stations",
+          "title": "MTA accessible-station entrance reference",
+          "sourceUpdatedAt": "2026-10-12",
+          "verifiedAt": "2026-11-12T06:02:15.229402+00:00"
         }
       ]
     }
