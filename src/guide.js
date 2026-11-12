@@ -26,7 +26,7 @@ export async function generateAnswer({ record, question, history, demo }) {
       responseJsonSchema: z.toJSONSchema(answerSchema),
       temperature: 0.2,
       maxOutputTokens: 800,
-      httpOptions: { timeout: 22000 },
+      httpOptions: { timeout: 22000, retryOptions: { attempts: 1 } },
     },
   });
   return { output: answerSchema.parse(JSON.parse(result.text || '')), usage: result.usageMetadata?.totalTokenCount ?? null };

@@ -28,7 +28,21 @@ export function createApp({ answer = askGuide, keyConfigured = () => Boolean(pro
       get_station_accessibility({ stationId: body.stationId });
       if (!keyConfigured()) return res.status(503).json({ error: 'ai_not_configured', message: 'The AI guide is not connected yet. You can still read station details and official sources below.' });
       try { res.json(await answer(body)); }
-      catch { res.status(502).json({ error: 'ai_unavailable', message: 'The AI guide could not answer just now. Try again shortly, or use the station card and official MTA links.' }); }
+      catch (error) {
+        // Classify in memory; never return or log the provider's raw error or key.
+        const raw = String(error?.message || '');
+        const status = Number(error?.status) || 0;
+        let code = 'ai_unavailable';
+        let message = 'The AI guide could not answer just now. Try again shortly, or use the station card and official MTA links.';
+        if (status === 429) { code = 'ai_quota'; message = 'Google has reached a usage limit for this AI connection. Try later; station cards and official MTA links are still available.'; }
+        else if (status === 401 || status === 403 || /API_KEY_INVALID|API key not valid|key expired/i.test(raw)) { code = 'ai_credentials'; message = 'The AI connection needs its private Gemini key checked by the project owner. Station cards are still available.'; }
+        else if (status === 404) { code = 'ai_model'; message = 'The configured AI model is unavailable. The project owner needs to select a supported Gemini model. Station cards are still available.'; }
+        else if (status === 400) { code = 'ai_request'; }
+        else if (error instanceof ZodError || error instanceof SyntaxError) { code = 'ai_response'; }
+        else if (/abort|timed? ?out|timeout/i.test(raw)) { code = 'ai_timeout'; }
+        console.warn('Gemini request failed', { code, providerStatus: status || null });
+        res.status(502).json({ error: code, message });
+      }
     } catch (error) {
       if (error instanceof ZodError || error.status === 404) return next(error);
       // Do not return provider errors: they may contain credentials or raw prompts.
