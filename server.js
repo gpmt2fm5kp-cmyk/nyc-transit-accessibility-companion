@@ -1,4 +1,5 @@
 import express from 'express';
+import { createElevatorService } from './src/elevator-status.js';
 import { rateLimit, ipKeyGenerator } from 'express-rate-limit';
 import { isIP } from 'node:net';
 import { ZodError } from 'zod';
@@ -13,7 +14,7 @@ export function rateLimitKey(req, onVercel = process.env.VERCEL === '1') {
   return ipKeyGenerator(onVercel && isIP(forwarded) ? forwarded : req.ip);
 }
 
-export function createApp({ answer = askGuide, keyConfigured = () => Boolean(process.env.GEMINI_API_KEY) } = {}) {
+export function createApp({ answer = askGuide, keyConfigured = () => Boolean(process.env.GEMINI_API_KEY), elevatorStatus = createElevatorService() } = {}) {
   const app = express();
   app.disable('x-powered-by');
   app.use((req, res, next) => {
@@ -22,9 +23,18 @@ export function createApp({ answer = askGuide, keyConfigured = () => Boolean(pro
     next();
   });
   app.use(express.json({ limit: '16kb' }));
-  app.get('/api/health', (req, res) => res.json({ ok: true, aiConfigured: keyConfigured(), stationCount: dataset.records.length, dataVerifiedAt: dataset.verifiedAt, refreshState: 'not_implemented', liveStatus: 'not_checked' }));
+  app.get('/api/health', (req, res) => res.json({ ok: true, aiConfigured: keyConfigured(), stationCount: dataset.records.length, dataVerifiedAt: dataset.verifiedAt, refreshState: 'not_implemented', liveStatus: 'on_demand_mta_feed' }));
   app.get('/api/stations', (req, res) => res.json({ ...search_stations({ query: req.query.query ?? '', borough: req.query.borough ?? 'All' }), verifiedAt: dataset.verifiedAt }));
   app.get('/api/stations/:stationId', (req, res) => res.json(get_station_accessibility({ stationId: req.params.stationId })));
+  app.get('/api/stations/:stationId/elevators', async (req, res, next) => {
+    try {
+      get_station_accessibility({ stationId: req.params.stationId });
+      res.json(await elevatorStatus(req.params.stationId));
+    } catch (error) {
+      if (error.status === 404) return next(error);
+      res.status(502).json({ error: 'mta_unavailable', message: 'MTA elevator updates could not be checked. Use the MTA status page before traveling.' });
+    }
+  });
   app.get('/api/stations/:stationId/demo', (req, res) => res.json(demonstrationFor(get_station_accessibility({ stationId: req.params.stationId }).record)));
   const questionLimit = rateLimit({ windowMs: 60_000, limit: 8, keyGenerator: req => rateLimitKey(req), standardHeaders: 'draft-8', legacyHeaders: false, message: { error: 'rate_limited', message: 'Please wait a minute before asking another question. Station cards are still available.' } });
   app.post('/api/ask', questionLimit, async (req, res, next) => {

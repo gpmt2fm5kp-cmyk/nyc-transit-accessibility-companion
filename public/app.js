@@ -104,6 +104,7 @@ function renderRecord() {
   $('#station-name').textContent=record.station.stationName;
   $('#station-routes').replaceChildren(routes(record.station.services));
   $('#station-borough').textContent=record.station.borough;
+  $('#station-access-brief').textContent={fully_accessible:'Step-free access listed · check elevator updates below',partially_accessible:'Limited step-free access · restrictions vary by service or direction',not_accessible:'No step-free access listed in the station reference',unknown:'Step-free access not confirmed'}[record.adaClassification];
   $('#access-label').textContent={fully_accessible:'Listed in MTA reference',partially_accessible:'Limited — see restrictions',not_accessible:'Not listed in MTA reference',unknown:'Not confirmed'}[record.adaClassification];
   $('#access-summary').dataset.access=record.adaClassification;
   $('.access-summary-icon').replaceChildren(icon(record.adaClassification==='not_accessible'?'no-access':'wheelchair'));
@@ -159,8 +160,8 @@ function renderRecord() {
     const section=element('div',undefined,'platform-record');
     section.append(link,element('p',`Checked ${date(source.verifiedAt)}. Source updated ${source.sourceUpdatedAt ? date(source.sourceUpdatedAt) : 'date not supplied'}.`,'source-date'));sourceContent.append(section);
   }
-  sourceContent.append(element('p','Snapshot updated by review and redeployment; no automatic refresh or live equipment check.'));
-  $('#snapshot-caption').textContent=`Reference checked ${date(record.snapshotVerifiedAt)} · No live elevator feed · No automatic refresh`;
+  sourceContent.append(element('p','Station reference updated by review and redeployment. Elevator outage reports are checked separately above.'));
+  $('#snapshot-caption').textContent=`Reference checked ${date(record.snapshotVerifiedAt)} · Elevator reports checked separately · Station reference is not automatically refreshed`;
   for (const button of document.querySelectorAll('.station-button')) button.setAttribute('aria-current',String(button.dataset.stationId===record.station.stationId));
   $('#station-detail').setAttribute('aria-busy','false');
 }
@@ -171,17 +172,52 @@ async function selectStation(stationId, focus=false) {
   for (const button of document.querySelectorAll('[data-feature]')) button.setAttribute('aria-expanded','false');
   $('#step-free-panel').hidden=true; $('#coming-soon-panel').hidden=true;
   state.record=null;
+  elevatorVersion++; $('#elevator-summary').textContent='Choose a station to check its elevators.'; $('#elevator-checked').textContent=''; $('#elevator-reports').replaceChildren();
   state.mode='snapshot';renderMode();
   for(const details of document.querySelectorAll('.access-section'))details.open=false;
   try {
     const {record}=await request(`/api/stations/${encodeURIComponent(stationId)}`);
     if(version!==state.selectVersion)return;
-    state.record=record;renderRecord();
+    state.record=record;renderRecord(); refreshElevators();
     if(focus){$('#station-name').tabIndex=-1;$('#station-name').focus({preventScroll:true});if(matchMedia('(max-width:760px)').matches)$('#station-detail').scrollIntoView({behavior:'smooth',block:'start'});}
     const url=new URL(location.href);url.searchParams.set('station',stationId);history.replaceState(null,'',url);
     $('#load-error').hidden=true;
   }catch(error){if(version===state.selectVersion){$('#station-detail').setAttribute('aria-busy','false');$('#load-error').textContent=error.message;$('#load-error').hidden=false;}}
 }
+let elevatorVersion = 0;
+async function refreshElevators() {
+  if (!state.record) return;
+  const stationId=state.record.station.stationId, version=++elevatorVersion;
+  const button=$('#refresh-elevators'); button.disabled=true; button.textContent='Checking…';
+  $('#elevator-summary').textContent='Checking MTA elevator reports…';
+  $('#elevator-checked').textContent=''; $('#elevator-reports').replaceChildren();
+  try {
+    const result=await request(`/api/stations/${encodeURIComponent(stationId)}/elevators`);
+    if(version!==elevatorVersion || state.record?.station.stationId!==stationId) return;
+    $('#elevator-summary').textContent=!result.elevatorCount ? 'No active passenger elevators listed for this station in MTA’s equipment feed.' : result.outages.length ? `${result.outages.length} elevator outage report${result.outages.length===1?'':'s'} · ${result.elevatorCount} elevators listed` : `No elevator outages reported · ${result.elevatorCount} elevators listed`;
+    const time=new Intl.DateTimeFormat('en-US',{month:'short',day:'numeric',hour:'numeric',minute:'2-digit',timeZone:'America/New_York',timeZoneName:'short'}).format(new Date(result.checkedAt));
+    $('#elevator-checked').textContent=`MTA feeds checked ${time}. Auto-check every 5 minutes while this page is visible.`;
+    for(const [title,reports] of [['Reported outages',result.outages],['Planned outages',result.planned]]) {
+      if(!reports.length) continue;
+      const details=element('details',undefined,'equipment-disclosure'); details.open=title==='Reported outages';
+      details.append(element('summary',`${title} (${reports.length})`));
+      for(const report of reports) {
+        const item=element('div',undefined,'equipment-report');
+        item.append(element('strong',`${report.equipmentId} · ${report.reason}`),element('p',report.serving));
+        if(report.startsAt) item.append(element('p',`MTA start: ${report.startsAt} (New York time)`));
+        if(report.estimatedReturn) item.append(element('p',`Estimated return: ${report.estimatedReturn} (New York time; may change)`));
+        details.append(item);
+      }
+      $('#elevator-reports').append(details);
+    }
+  } catch(error) {
+    if(version===elevatorVersion && state.record?.station.stationId===stationId) $('#elevator-summary').textContent=error.message;
+  } finally {
+    if(version===elevatorVersion){button.disabled=false;button.textContent='Refresh status';}
+  }
+}
+$('#refresh-elevators').addEventListener('click',refreshElevators);
+setInterval(()=>{if(!document.hidden)refreshElevators();},300_000);
 function renderMode(){
   const demo=state.mode==='demonstration';
   $('#demo-panel').hidden=!demo;$('#question-mode').hidden=!demo;
@@ -216,7 +252,7 @@ $('#ask-form').addEventListener('submit',async event=>{
     pending.remove();
     const box=message('assistant',result.answer);
     box.append(element('p',`Next step: ${result.nextStep}`,'next-step'));
-    box.append(element('p',`${result.dataMode==='demonstration'?'Sample outage for demonstration. ':''}${result.canConfirm?'Supported by the dated reference.':'This answer cannot confirm the requested conditions.'} Current elevator status has not been checked.`,'answer-note'));
+    box.append(element('p',`${result.dataMode==='demonstration'?'Sample outage for demonstration. ':''}${result.canConfirm?'Supported by the dated reference.':'This answer cannot confirm the requested conditions.'} AI answers use station reference data. See the separate elevator update panel for MTA reports.`,'answer-note'));
     state.history.push({role:'user',text:question},{role:'assistant',text:`${result.answer} ${result.nextStep}`});state.history=state.history.slice(-6);
     if(Number.isFinite(result.usage?.totalTokens)){$('#usage').textContent=`${result.usage.totalTokens.toLocaleString()} tokens used for this response`;$('#usage').hidden=false;}
   }catch(error){if(version!==state.askVersion)return;pending.remove();message('assistant',error.message,true);}

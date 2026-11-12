@@ -87,3 +87,12 @@ test('proxy IP headers are used only on Vercel',()=>{
  assert.equal(rateLimitKey(request,true),'203.0.113.10');
  assert.equal(rateLimitKey({headers:{'x-forwarded-for':'invalid'},ip:'127.0.0.1'},true),'127.0.0.1');
 });
+
+test('elevator endpoint validates station before loading and safely reports upstream failure',async()=>{
+ let calls=0;
+ await withServer({elevatorStatus:async()=>{calls++;throw Error('private upstream diagnostics');}},async base=>{
+  const unknown=await fetch(`${base}/api/stations/999999/elevators`);assert.equal(unknown.status,404);assert.equal(calls,0);
+  const failure=await fetch(`${base}/api/stations/471/elevators`);assert.equal(failure.status,502);
+  const body=await failure.json();assert.equal(body.error,'mta_unavailable');assert.doesNotMatch(JSON.stringify(body),/private upstream/);
+ });
+});

@@ -43,5 +43,5 @@ export async function askGuide(input, generate = generateAnswer) {
   if (demo) validated.canConfirm = false;
   // The MVP never confirms current operating conditions, regardless of model output.
   if (/\b(now|today|currently|working|running|operating|broken|outage|live)\b/i.test(parsed.question)) validated.canConfirm = false;
-  return { ...validated, stationId: parsed.stationId, dataMode: parsed.dataMode, disclosure: demo ? demo.label : 'Current elevator status has not been checked.', sources: record.sources, snapshotVerifiedAt: record.snapshotVerifiedAt, usage: { totalTokens: usage } };
+  return { ...validated, stationId: parsed.stationId, dataMode: parsed.dataMode, disclosure: demo ? demo.label : 'AI answers use station reference data. See the separate elevator update panel for MTA reports.', sources: record.sources, snapshotVerifiedAt: record.snapshotVerifiedAt, usage: { totalTokens: usage } };
 }
