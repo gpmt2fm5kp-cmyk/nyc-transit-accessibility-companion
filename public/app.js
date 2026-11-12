@@ -185,6 +185,6 @@ async function initialize(){
   const requested=new URLSearchParams(location.search).get('station');
   const first=state.stations.find(s=>s.stationId===requested)||state.stations[0];
   if(first)await selectStation(first.stationId);
-  try{const health=await request('/api/health');state.aiConfigured=health.aiConfigured;$('#ai-status').textContent=health.aiConfigured?'Gemini guide connected':'AI guide not connected yet. Station cards are available.';$('#ai-status').classList.toggle('connected',health.aiConfigured);}catch{$('#ai-status').textContent='Guide connection unavailable. Try refreshing.';}
+  try{const health=await request('/api/health');state.aiConfigured=health.aiConfigured;$('#ai-status').textContent=health.aiConfigured?'Gemini key configured · ready for a question.':'AI guide not connected yet. Station cards are available.';$('#ai-status').classList.toggle('connected',health.aiConfigured);}catch{$('#ai-status').textContent='Guide connection unavailable. Try refreshing.';}
 }
 initialize();
