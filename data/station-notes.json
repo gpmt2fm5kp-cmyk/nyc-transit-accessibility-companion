@@ -1,0 +1,503 @@
+{
+  "471": {
+    "aliases": [
+      "34 St-Hudson Yards"
+    ],
+    "entrances": [
+      {
+        "entranceId": "471-reference-1",
+        "locationDescription": "Hudson Yards: south side of 34th Street, between 10th Avenue and Hudson Boulevard East.",
+        "stepFree": "yes",
+        "entryAllowed": null,
+        "exitAllowed": null,
+        "services": [],
+        "directionNotes": "Match the relevant service and direction using the official entrance reference; opening hours and equipment operation are not checked.",
+        "sources": [
+          {
+            "url": "https://www.mta.info/accessibility/stations",
+            "title": "MTA accessible-station entrance reference",
+            "sourceUpdatedAt": "2026-10-12",
+            "verifiedAt": "2026-11-12T00:16:56.399774+00:00"
+          }
+        ]
+      }
+    ],
+    "directionNotes": "Read each service and direction separately. A station listing does not confirm that equipment is operating."
+  },
+  "151": {
+    "aliases": [
+      "145 St",
+      "145 St"
+    ],
+    "entrances": [],
+    "directionNotes": "Read each service and direction separately. A station listing does not confirm that equipment is operating."
+  },
+  "611": {
+    "aliases": [
+      "Times Sq-42 St",
+      "42 St-Port Authority Bus Terminal",
+      "Times Sq-42 St",
+      "Times Sq-42 St",
+      "Times Sq-42 St"
+    ],
+    "entrances": [
+      {
+        "entranceId": "611-reference-1",
+        "locationDescription": "Southeast corner, 42nd Street / 7th Avenue.",
+        "stepFree": "yes",
+        "entryAllowed": null,
+        "exitAllowed": null,
+        "services": [],
+        "directionNotes": "Match the relevant service and direction using the official entrance reference; opening hours and equipment operation are not checked.",
+        "sources": [
+          {
+            "url": "https://www.mta.info/accessibility/stations",
+            "title": "MTA accessible-station entrance reference",
+            "sourceUpdatedAt": "2026-10-12",
+            "verifiedAt": "2026-11-12T00:16:56.399774+00:00"
+          }
+        ]
+      },
+      {
+        "entranceId": "611-reference-2",
+        "locationDescription": "Broadway Plaza, between 42nd and 43rd streets.",
+        "stepFree": "yes",
+        "entryAllowed": null,
+        "exitAllowed": null,
+        "services": [],
+        "directionNotes": "Match the relevant service and direction using the official entrance reference; opening hours and equipment operation are not checked.",
+        "sources": [
+          {
+            "url": "https://www.mta.info/accessibility/stations",
+            "title": "MTA accessible-station entrance reference",
+            "sourceUpdatedAt": "2026-10-12",
+            "verifiedAt": "2026-11-12T00:16:56.399774+00:00"
+          }
+        ]
+      }
+    ],
+    "directionNotes": "The passage to Port Authority contains ramps that do not meet ADA guidelines. Do not assume an accessible transfer between the two stations."
+  },
+  "427": {
+    "aliases": [
+      "West Farms Sq-E Tremont Av"
+    ],
+    "entrances": [],
+    "directionNotes": "Read each service and direction separately. A station listing does not confirm that equipment is operating."
+  },
+  "603": {
+    "aliases": [
+      "149 St-Hostos",
+      "149 St-Hostos",
+      "149 St Grand Concourse"
+    ],
+    "entrances": [
+      {
+        "entranceId": "603-reference-1",
+        "locationDescription": "Southwest corner, Grand Concourse / East 149th Street.",
+        "stepFree": "yes",
+        "entryAllowed": null,
+        "exitAllowed": null,
+        "services": [],
+        "directionNotes": "Match the relevant service and direction using the official entrance reference; opening hours and equipment operation are not checked.",
+        "sources": [
+          {
+            "url": "https://www.mta.info/accessibility/stations",
+            "title": "MTA accessible-station entrance reference",
+            "sourceUpdatedAt": "2026-10-12",
+            "verifiedAt": "2026-11-12T00:16:56.399774+00:00"
+          }
+        ]
+      }
+    ],
+    "directionNotes": "Read each service and direction separately. A station listing does not confirm that equipment is operating."
+  },
+  "604": {
+    "aliases": [
+      "161 St-Yankee Stadium",
+      "161 St-Yankee Stadium"
+    ],
+    "entrances": [
+      {
+        "entranceId": "604-reference-1",
+        "locationDescription": "Northeast corner, 161st Street / River Avenue.",
+        "stepFree": "yes",
+        "entryAllowed": null,
+        "exitAllowed": null,
+        "services": [],
+        "directionNotes": "Match the relevant service and direction using the official entrance reference; opening hours and equipment operation are not checked.",
+        "sources": [
+          {
+            "url": "https://www.mta.info/accessibility/stations",
+            "title": "MTA accessible-station entrance reference",
+            "sourceUpdatedAt": "2026-10-12",
+            "verifiedAt": "2026-11-12T00:16:56.399774+00:00"
+          }
+        ]
+      }
+    ],
+    "directionNotes": "Read each service and direction separately. A station listing does not confirm that equipment is operating."
+  },
+  "617": {
+    "aliases": [
+      "Atlantic Av-Barclays Ctr",
+      "Atlantic Av-Barclays Ctr",
+      "Atlantic Av-Barclays Ctr"
+    ],
+    "entrances": [
+      {
+        "entranceId": "617-reference-1",
+        "locationDescription": "Southeast corner, Pacific Street / 4th Avenue.",
+        "stepFree": "yes",
+        "entryAllowed": null,
+        "exitAllowed": null,
+        "services": [],
+        "directionNotes": "Match the relevant service and direction using the official entrance reference; opening hours and equipment operation are not checked.",
+        "sources": [
+          {
+            "url": "https://www.mta.info/accessibility/stations",
+            "title": "MTA accessible-station entrance reference",
+            "sourceUpdatedAt": "2026-10-12",
+            "verifiedAt": "2026-11-12T00:16:56.399774+00:00"
+          }
+        ]
+      },
+      {
+        "entranceId": "617-reference-2",
+        "locationDescription": "Hanson Place / Flatbush Avenue.",
+        "stepFree": "yes",
+        "entryAllowed": null,
+        "exitAllowed": null,
+        "services": [],
+        "directionNotes": "Match the relevant service and direction using the official entrance reference; opening hours and equipment operation are not checked.",
+        "sources": [
+          {
+            "url": "https://www.mta.info/accessibility/stations",
+            "title": "MTA accessible-station entrance reference",
+            "sourceUpdatedAt": "2026-10-12",
+            "verifiedAt": "2026-11-12T00:16:56.399774+00:00"
+          }
+        ]
+      }
+    ],
+    "directionNotes": "Read each service and direction separately. A station listing does not confirm that equipment is operating."
+  },
+  "636": {
+    "aliases": [
+      "Jay St-MetroTech",
+      "Jay St-MetroTech"
+    ],
+    "entrances": [
+      {
+        "entranceId": "636-reference-1",
+        "locationDescription": "Northwest corner, Jay Street / Willoughby Street.",
+        "stepFree": "yes",
+        "entryAllowed": null,
+        "exitAllowed": null,
+        "services": [],
+        "directionNotes": "Match the relevant service and direction using the official entrance reference; opening hours and equipment operation are not checked.",
+        "sources": [
+          {
+            "url": "https://www.mta.info/accessibility/stations",
+            "title": "MTA accessible-station entrance reference",
+            "sourceUpdatedAt": "2026-10-12",
+            "verifiedAt": "2026-11-12T00:16:56.399774+00:00"
+          }
+        ]
+      }
+    ],
+    "directionNotes": "Read each service and direction separately. A station listing does not confirm that equipment is operating."
+  },
+  "620": {
+    "aliases": [
+      "Court St",
+      "Borough Hall",
+      "Borough Hall"
+    ],
+    "entrances": [
+      {
+        "entranceId": "620-reference-1",
+        "locationDescription": "Outside the Supreme Court building on Court Street.",
+        "stepFree": "yes",
+        "entryAllowed": null,
+        "exitAllowed": null,
+        "services": [],
+        "directionNotes": "Match the relevant service and direction using the official entrance reference; opening hours and equipment operation are not checked.",
+        "sources": [
+          {
+            "url": "https://www.mta.info/accessibility/stations",
+            "title": "MTA accessible-station entrance reference",
+            "sourceUpdatedAt": "2026-10-12",
+            "verifiedAt": "2026-11-12T00:16:56.399774+00:00"
+          }
+        ]
+      },
+      {
+        "entranceId": "620-reference-2",
+        "locationDescription": "Outside Borough Hall on Joralemon Street.",
+        "stepFree": "yes",
+        "entryAllowed": null,
+        "exitAllowed": null,
+        "services": [],
+        "directionNotes": "Match the relevant service and direction using the official entrance reference; opening hours and equipment operation are not checked.",
+        "sources": [
+          {
+            "url": "https://www.mta.info/accessibility/stations",
+            "title": "MTA accessible-station entrance reference",
+            "sourceUpdatedAt": "2026-10-12",
+            "verifiedAt": "2026-11-12T00:16:56.399774+00:00"
+          }
+        ]
+      }
+    ],
+    "directionNotes": "Borough Hall platforms are listed as accessible; Court St (R) and the transfer to Court St are not accessible."
+  },
+  "616": {
+    "aliases": [
+      "Jackson Hts-Roosevelt Av",
+      "74 St-Broadway"
+    ],
+    "entrances": [
+      {
+        "entranceId": "616-reference-1",
+        "locationDescription": "Station house: northwest corner, Roosevelt Avenue / Broadway.",
+        "stepFree": "yes",
+        "entryAllowed": null,
+        "exitAllowed": null,
+        "services": [],
+        "directionNotes": "Match the relevant service and direction using the official entrance reference; opening hours and equipment operation are not checked.",
+        "sources": [
+          {
+            "url": "https://www.mta.info/accessibility/stations",
+            "title": "MTA accessible-station entrance reference",
+            "sourceUpdatedAt": "2026-10-12",
+            "verifiedAt": "2026-11-12T00:16:56.399774+00:00"
+          }
+        ]
+      }
+    ],
+    "directionNotes": "Read each service and direction separately. A station listing does not confirm that equipment is operating."
+  },
+  "606": {
+    "aliases": [
+      "Court Sq-23 St",
+      "Court Sq",
+      "Court Sq"
+    ],
+    "entrances": [
+      {
+        "entranceId": "606-reference-1",
+        "locationDescription": "Court Sq: northeast corner, Jackson Avenue / 23rd Street.",
+        "stepFree": "yes",
+        "entryAllowed": null,
+        "exitAllowed": null,
+        "services": [],
+        "directionNotes": "Match the relevant service and direction using the official entrance reference; opening hours and equipment operation are not checked.",
+        "sources": [
+          {
+            "url": "https://www.mta.info/accessibility/stations",
+            "title": "MTA accessible-station entrance reference",
+            "sourceUpdatedAt": "2026-10-12",
+            "verifiedAt": "2026-11-12T00:16:56.399774+00:00"
+          }
+        ]
+      },
+      {
+        "entranceId": "606-reference-2",
+        "locationDescription": "Court Sq\u201323 St: City View Tower, 23-15 44th Drive; Manhattan-bound access only.",
+        "stepFree": "yes",
+        "entryAllowed": null,
+        "exitAllowed": null,
+        "services": [],
+        "directionNotes": "Match the relevant service and direction using the official entrance reference; opening hours and equipment operation are not checked.",
+        "sources": [
+          {
+            "url": "https://www.mta.info/accessibility/stations",
+            "title": "MTA accessible-station entrance reference",
+            "sourceUpdatedAt": "2026-10-12",
+            "verifiedAt": "2026-11-12T00:16:56.399774+00:00"
+          }
+        ]
+      }
+    ],
+    "directionNotes": "Court Sq\u201323 St access is Manhattan-bound only. Check the separate service and direction records below."
+  },
+  "461": {
+    "aliases": [
+      "Queensboro Plaza",
+      "Queensboro Plaza"
+    ],
+    "entrances": [
+      {
+        "entranceId": "461-reference-1",
+        "locationDescription": "Southwest corner, Queens Plaza South / Crescent Street.",
+        "stepFree": "yes",
+        "entryAllowed": null,
+        "exitAllowed": null,
+        "services": [],
+        "directionNotes": "Match the relevant service and direction using the official entrance reference; opening hours and equipment operation are not checked.",
+        "sources": [
+          {
+            "url": "https://www.mta.info/accessibility/stations",
+            "title": "MTA accessible-station entrance reference",
+            "sourceUpdatedAt": "2026-10-12",
+            "verifiedAt": "2026-11-12T00:16:56.399774+00:00"
+          }
+        ]
+      }
+    ],
+    "directionNotes": "Read each service and direction separately. A station listing does not confirm that equipment is operating."
+  },
+  "510": {
+    "aliases": [
+      "New Dorp",
+      "Staten Island Railway"
+    ],
+    "entrances": [
+      {
+        "entranceId": "510-reference-1",
+        "locationDescription": "St. George-bound: elevator near the southwest corner of New Dorp Lane and New Dorp Plaza.",
+        "stepFree": "yes",
+        "entryAllowed": null,
+        "exitAllowed": null,
+        "services": [
+          "SIR"
+        ],
+        "directionNotes": "Reference description; current operation is checked separately.",
+        "sources": [
+          {
+            "url": "https://www.mta.info/accessibility/stations",
+            "title": "MTA accessible-station entrance reference",
+            "sourceUpdatedAt": "2026-10-12",
+            "verifiedAt": "2026-11-12T06:02:15.229402+00:00"
+          }
+        ]
+      },
+      {
+        "entranceId": "510-reference-2",
+        "locationDescription": "Tottenville-bound: elevator near the southeast corner of New Dorp Lane and New Dorp Plaza.",
+        "stepFree": "yes",
+        "entryAllowed": null,
+        "exitAllowed": null,
+        "services": [
+          "SIR"
+        ],
+        "directionNotes": "Reference description; current operation is checked separately.",
+        "sources": [
+          {
+            "url": "https://www.mta.info/accessibility/stations",
+            "title": "MTA accessible-station entrance reference",
+            "sourceUpdatedAt": "2026-10-12",
+            "verifiedAt": "2026-11-12T06:02:15.229402+00:00"
+          }
+        ]
+      }
+    ],
+    "directionNotes": "Railway reference only. Ferry access and operating conditions require a separate check with NYC DOT."
+  },
+  "522": {
+    "aliases": [
+      "Tottenville",
+      "Staten Island Railway"
+    ],
+    "entrances": [
+      {
+        "entranceId": "522-reference-1",
+        "locationDescription": "Ramp on the south side of the station.",
+        "stepFree": "yes",
+        "entryAllowed": null,
+        "exitAllowed": null,
+        "services": [
+          "SIR"
+        ],
+        "directionNotes": "Reference description; current operation is checked separately.",
+        "sources": [
+          {
+            "url": "https://www.mta.info/accessibility/stations",
+            "title": "MTA accessible-station entrance reference",
+            "sourceUpdatedAt": "2026-10-12",
+            "verifiedAt": "2026-11-12T06:02:15.229402+00:00"
+          }
+        ]
+      }
+    ],
+    "directionNotes": "Railway reference only. Ferry access and operating conditions require a separate check with NYC DOT."
+  },
+  "501": {
+    "aliases": [
+      "St George",
+      "Staten Island Railway"
+    ],
+    "entrances": [
+      {
+        "entranceId": "501-reference-1",
+        "locationDescription": "North-side elevator connects the bus/taxi, ferry and railway levels.",
+        "stepFree": "yes",
+        "entryAllowed": null,
+        "exitAllowed": null,
+        "services": [
+          "SIR"
+        ],
+        "directionNotes": "Reference description; current operation is checked separately.",
+        "sources": [
+          {
+            "url": "https://www.mta.info/accessibility/stations",
+            "title": "MTA accessible-station entrance reference",
+            "sourceUpdatedAt": "2026-10-12",
+            "verifiedAt": "2026-11-12T06:02:15.229402+00:00"
+          }
+        ]
+      },
+      {
+        "entranceId": "501-reference-2",
+        "locationDescription": "South-side elevator connects passenger drop-off and ferry levels.",
+        "stepFree": "yes",
+        "entryAllowed": null,
+        "exitAllowed": null,
+        "services": [
+          "SIR"
+        ],
+        "directionNotes": "Reference description; current operation is checked separately.",
+        "sources": [
+          {
+            "url": "https://www.mta.info/accessibility/stations",
+            "title": "MTA accessible-station entrance reference",
+            "sourceUpdatedAt": "2026-10-12",
+            "verifiedAt": "2026-11-12T06:02:15.229402+00:00"
+          }
+        ]
+      }
+    ],
+    "directionNotes": "Railway reference only. Ferry access and operating conditions require a separate check with NYC DOT."
+  },
+  "405": {
+    "aliases": [
+      "23 St"
+    ],
+    "entrances": []
+  },
+  "54": {
+    "aliases": [
+      "Sheepshead Bay Rd"
+    ],
+    "entrances": []
+  },
+  "444": {
+    "aliases": [
+      "Gun Hill Rd-Dyre Av line"
+    ],
+    "entrances": []
+  },
+  "421": {
+    "aliases": [
+      "Gun Hill Rd-White Plains Rd line"
+    ],
+    "entrances": []
+  },
+  "424": {
+    "aliases": [
+      "Pelham Pkwy-White Plains Rd Line"
+    ],
+    "entrances": []
+  }
+}

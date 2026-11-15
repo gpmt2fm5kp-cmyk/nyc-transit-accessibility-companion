@@ -82,7 +82,7 @@ function renderStations() {
     $('#station-list').append(button);
   }
   $('#empty-state').hidden = state.stations.length > 0;
-  $('#result-count').textContent = `${state.stations.length} ${state.stations.length === 1 ? 'station' : 'stations'}${state.borough !== 'All' ? ` in ${state.borough}` : ' in this pilot'}`;
+  $('#result-count').textContent = `${state.stations.length} ${state.stations.length === 1 ? 'station card' : 'station cards'}${state.borough !== 'All' ? ` in ${state.borough}` : ''}`;
 }
 let searchVersion = 0;
 async function searchStations() {
@@ -91,6 +91,7 @@ async function searchStations() {
     const result = await request(`/api/stations?${new URLSearchParams({ query: state.query, borough: state.borough })}`);
     if (version !== searchVersion) return;
     state.stations = result.matches;
+    if(!state.query && state.borough==='All')$('#station-total').textContent=`${result.matches.length} CARDS`;
     renderStations();
     $('#load-error').hidden = true;
   } catch(error) { if (version === searchVersion) { $('#load-error').textContent = error.message; $('#load-error').hidden = false; } }
@@ -124,9 +125,9 @@ function renderRecord() {
     ? 'Plan an accessible alternative with MTA.'
     : record.adaClassification==='partially_accessible'
       ? 'Access depends on your service or direction.'
-      : 'Use the documented entrance below.';
+      : record.entrances.length ? 'Use the documented entrance below.' : 'Entrance details are not available here. Check the MTA reference.';
   const entrances=$('#entrance-content'); entrances.replaceChildren();
-  if (!record.entrances.length) entrances.append(element('p','No wheelchair-accessible entrance listed in our reference.'));
+  if (!record.entrances.length) entrances.append(element('p',record.adaClassification==='not_accessible' ? 'MTA does not list this station as wheelchair-accessible.' : 'An accessible entrance location is not documented in our imported reference. Use the official MTA reference before traveling.'));
   else {
     const list=element('ul',undefined,'entrance-list');
     for (const entrance of record.entrances) list.append(element('li',entrance.locationDescription));
@@ -139,7 +140,7 @@ function renderRecord() {
     const unrestricted=[...new Set(record.platforms.filter(p=>p.classification==='fully_accessible').flatMap(p=>p.services))];
     if(unrestricted.length) quickPlatforms.append(element('p',`${unrestricted.join(' / ')} · access listed`));
     for(const platform of record.platforms.filter(p=>p.classification!=='fully_accessible')) {
-      const note=platform.classification==='not_accessible'?'no wheelchair access listed':platform.notes || 'direction restrictions; see details';
+      const note=platform.classification==='not_accessible'?'no wheelchair access listed':platform.classification==='unknown'?'access not confirmed':platform.notes || 'direction restrictions; see details';
       quickPlatforms.append(element('p',`${platform.services.join(' / ')} · ${note}`));
     }
   }
@@ -148,7 +149,7 @@ function renderRecord() {
     '620':'Court St (R) and its transfer are not accessible.',
     '606':'E / F: Manhattan-bound access only.'
   };
-  const restriction=restrictions[record.station.stationId];
+  const restriction=restrictions[record.station.stationId] || record.restrictionBrief;
   $('#station-restriction-brief').textContent=restriction || ''; $('#station-restriction-brief').hidden=!restriction;
   $('#quick-restriction').textContent=restriction || '';
   $('#quick-restriction').hidden=!restriction;

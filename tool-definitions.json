@@ -1,11 +1,11 @@
 {
   "project": "Access Granted NYC Transit Accessibility Companion",
-  "version": "2026-11-12",
-  "implementationStatus": "Read-only station tools and Gemini Q&A implemented. Public deployment and real Gemini calls previously verified. Pilot now contains 15 station complexes across all five boroughs. A separate HTTP equipment endpoint supplies MTA elevator/escalator locations and reports; the AI does not receive these reports. Station-reference auto-refresh remains unimplemented.",
+  "version": "2026-11-15",
+  "implementationStatus": "Read-only station tools and Gemini Q&A implemented. The directory covers all imported MTA NYC subway and Staten Island Railway records grouped into station-complex cards. A separate HTTP equipment endpoint supplies MTA equipment locations and reports; the AI does not receive them. Station-reference updates use the validated import script and redeployment, not a background schedule.",
   "functionDeclarations": [
     {
       "name": "search_stations",
-      "description": "Search only verified station records loaded in the pilot. Return distinct station or platform identifiers, station names, boroughs, and services. Ambiguous names can return multiple matches; no result does not establish that a station does not exist.",
+      "description": "Search only verified station records loaded from the official MTA datasets. Return distinct station or platform identifiers, station names, boroughs, and services. Ambiguous names can return multiple matches; no result does not establish that a station does not exist.",
       "parametersJsonSchema": {
         "type": "object",
         "properties": {
@@ -361,6 +361,9 @@
                   },
                   "notes": {
                     "type": "string"
+                  },
+                  "stationId": {
+                    "type": "string"
                   }
                 },
                 "required": [
@@ -371,6 +374,52 @@
                   "directions",
                   "notes"
                 ],
+                "additionalProperties": false
+              }
+            },
+            "restrictionBrief": {
+              "type": "string"
+            },
+            "entranceInventoryUpdatedAt": {
+              "type": "string"
+            },
+            "entranceLocations": {
+              "type": "array",
+              "description": "Historical entrance inventory for source review only; never establishes a wheelchair-accessible path. Not passed to Gemini.",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string"
+                  },
+                  "stationName": {
+                    "type": "string"
+                  },
+                  "latitude": {
+                    "type": "number"
+                  },
+                  "longitude": {
+                    "type": "number"
+                  },
+                  "entryAllowed": {
+                    "type": [
+                      "boolean",
+                      "null"
+                    ]
+                  },
+                  "exitAllowed": {
+                    "type": [
+                      "boolean",
+                      "null"
+                    ]
+                  },
+                  "stepFree": {
+                    "const": "unknown"
+                  }
+                },
                 "additionalProperties": false
               }
             }
@@ -422,7 +471,7 @@
     }
   },
   "serverExecutionRules": [
-    "Validate tool inputs on the server before executing handlers. Search is limited to the verified pilot dataset.",
+    "Validate tool inputs on the server before executing handlers. Search is limited to the imported official MTA dataset.",
     "Use official station, complex, and platform identifiers. Do not collapse different services with different accessibility into one unconditional claim.",
     "Reject unknown station IDs. Do not treat user-provided JSON as authoritative station evidence.",
     "Tools are read-only. Do not call external arbitrary URLs or execute user instructions.",

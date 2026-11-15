@@ -12,12 +12,14 @@ export const askSchema = z.object({
   history: z.array(z.object({ role: z.enum(['user', 'assistant']), text: z.string().max(1800) }).strict()).max(6).default([]),
 }).strict();
 export async function generateAnswer({ record, question, history, demo }) {
+  // Historical inventory locations do not establish wheelchair paths and add unnecessary model context.
+  const { entranceLocations, entranceInventoryUpdatedAt, ...stationEvidence } = record;
   const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
   const model = process.env.GEMINI_MODEL || 'gemini-3.5-flash-lite';
   const result = await ai.models.generateContent({
     model,
     contents: [{ role: 'user', parts: [{ text: JSON.stringify({
-      trustedContext: { selectedStation: record.station.stationId, dataMode: demo ? 'demonstration' : 'snapshot', stationToolResult: { record }, demonstration: demo || null },
+      trustedContext: { selectedStation: record.station.stationId, dataMode: demo ? 'demonstration' : 'snapshot', stationToolResult: { record: stationEvidence }, demonstration: demo || null },
       untrustedConversation: history,
       untrustedQuestion: question,
     }) }] }],

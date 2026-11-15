@@ -1,0 +1,61 @@
+{
+  "checkedAt": "2026-11-15T19:02:37.514Z",
+  "sourceCounts": {
+    "stations": 496,
+    "stationIds": 493,
+    "complexes": 445,
+    "entrances": 2120
+  },
+  "cards": 445,
+  "byBorough": {
+    "Manhattan": 121,
+    "Bronx": 68,
+    "Brooklyn": 156,
+    "Queens": 79,
+    "Staten Island": 21
+  },
+  "referenceSections": 147,
+  "matchedSections": 147,
+  "unmatchedReferences": [],
+  "curatedFallbacks": 0,
+  "cardsWithAccessibleEntranceNotes": 137,
+  "cardsWithoutAccessibleEntranceNotes": [
+    {
+      "id": "108",
+      "name": "Middle Village-Metropolitan Av",
+      "services": [
+        "M"
+      ]
+    },
+    {
+      "id": "192",
+      "name": "Rockaway Blvd",
+      "services": [
+        "A"
+      ]
+    },
+    {
+      "id": "203",
+      "name": "Rockaway Park-Beach 116 St",
+      "services": [
+        "A",
+        "S"
+      ]
+    }
+  ],
+  "sourceDates": {
+    "stations": "2026-11-15T05:17:59.000Z",
+    "complexes": "2026-11-15T05:24:38.000Z",
+    "entrances": "2025-12-05T18:36:18.000Z",
+    "accessible": "2026-10-12T12:00:00.000Z"
+  },
+  "sourceHashes": {
+    "stations": "bfbe91c6df66e10c7f7887ec80afc81e305f8ba470f6a34a183fafb96cda42cf",
+    "complexes": "a8bf65e5734003c60b9ee750a9acdaf0bf0343bbfb300ae064098e7df76ec40c",
+    "entrances": "49bd9745ae09d9f26b516195b40074a754bb8950ca39faee21fdcb0e7e0b79eb",
+    "stations-meta": "11806ed17e4c08bb8027b11fac7777a0b528b5e8c836a63740ac0e4acea1d3b4",
+    "complexes-meta": "5116c178d54ee65bf2e89efc6f6de6f4221c9eb9ce252ea530657410240226fa",
+    "entrances-meta": "aecc20fb22b3dd87bf63fee49fdc34578510539b9ff0d9b674b84327941bc371",
+    "accessible": "a19ac6122bb2d01bdc35ce9d1ca1d4fc5b383d3cd2f27f47b461a2b706fd8e87"
+  }
+}

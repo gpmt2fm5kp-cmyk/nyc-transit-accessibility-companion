@@ -4,7 +4,7 @@ NYC subway accessibility, explained in plain language. A solo AI Community Sprin
 
 ## What works
 
-- Search 15 selected station locations/complexes by name, line or any of the five boroughs.
+- Search all 445 station/transfer-complex cards by name, line or any of the five boroughs. The Nov 15, 2026 import covers all 496 GTFS station records (493 distinct MTA station IDs, including 21 Staten Island Railway stations) in the official source. Multiple station/service records in a transfer complex stay together without losing their restrictions.
 - Read independently usable station cards, documented entrance locations, service/direction flags, sources and dates.
 - Switch between light mode and the approved near-black dark mode. Only the appearance preference persists on the device.
 - Ask Gemini about the selected record through a server-side API. Request and response validation use Zod. Cards stay available if AI is unavailable.
@@ -37,7 +37,11 @@ No database, Unsplash account or image key is needed for this MVP. No keys are i
 
 `data/stations.json` contains a dated reference snapshot checked against [MTA Subway Stations on NY Open Data](https://data.ny.gov/Transportation/MTA-Subway-Stations/39hk-dx4f) and the [MTA accessible-station reference](https://www.mta.info/accessibility/stations). Each record carries original station/complex/platform identifiers and provenance dates. `sourceUpdatedAt` belongs to the source; `snapshotVerifiedAt` is the real source-check time. Neither confirms equipment operation.
 
-Coverage: 34 St–Hudson Yards; 145 St serving A/C/B/D; Times Sq–42 St (including its Port Authority connection restrictions); West Farms Sq–E Tremont Av; 149 St–Hostos (the proposed Grand Concourse location); 161 St–Yankee Stadium; Atlantic Av–Barclays Ctr; Jay St–MetroTech; Borough Hall/Court St; Jackson Hts/74 St–Broadway; Court Sq/Court Sq–23 St; Queensboro Plaza; St. George; New Dorp; Tottenville (the final three are Staten Island Railway).
+Coverage: all NYC subway and Staten Island Railway station records in the official MTA station and station-complex datasets. Current cards: Manhattan 121, Bronx 68, Brooklyn 156, Queens 79, Staten Island 21. Counts describe transfer-complex cards, not platforms or individual street entrances. Ferries, LIRR, Metro-North, PATH and AirTrain are not included.
+
+`node scripts/import-stations.js` downloads and validates the official station records, complex membership, historical entrance inventory, and MTA accessible-station entrance reference. It requires no AI or paid key. It rejects truncated feeds, duplicate GTFS IDs, mismatched complex members and an unexpected reference-page structure before replacing the snapshot. Optional `--source-dir PATH` reads previously downloaded source files for reproducible local checks. `data/import-report.json` records source hashes, source dates, coverage and any unmatched entrance references. `data/station-notes.json` preserves reviewed aliases and dated entrance fallbacks. Raw inventory coordinates/types are not interpreted as an accessible path and are excluded from Gemini context.
+
+The November 15 import matches all 147 accessible-reference sections, producing entrance notes for 137 of the 140 cards listed with some accessibility. Middle Village–Metropolitan Av, Rockaway Blvd and Rockaway Park–Beach 116 St have no usable accessible-entrance description in that reference; their cards explicitly keep entrance details unknown. The separate entrance inventory was last updated December 5, 2025, and its original date remains visible. An import date is an automated retrieval/validation time, not a claim that someone physically audited every station. No card implies current equipment operation from station-level ADA flags.
 
 West Farms Sq and 145 St are not listed ADA accessible in the checked data. Court Sq and Borough Hall/Court St retain service and direction restrictions. The app must never imply that every station or transfer is accessible.
 
@@ -73,6 +77,6 @@ Original AG route-line SVG; no copied MTA map or logo. Service identifiers use i
 
 ## Approved interface
 
-The station card starts with an access conclusion, important restrictions, four feature choices, and the AI question area. Wheelchair access and equipment details open on demand; vision and hearing support remain explicitly marked Coming soon. One outlined Close details control returns focus to its feature button. Reduced-motion users skip the brief opening/closing transition. All 15 stations retain source dates; the three Staten Island entries were checked against the official station dataset and entrance reference on Nov 12, 2026. Ferry operations are a separate NYC DOT service and are not included in railway status.
+The station card starts with an access conclusion, important restrictions, four feature choices, and the AI question area. Wheelchair access and equipment details open on demand; vision and hearing support remain explicitly marked Coming soon. One outlined Close details control returns focus to its feature button. Reduced-motion users skip the brief opening/closing transition. All cards retain source dates. Full-network coverage uses the existing layout. Ferry operations are a separate NYC DOT service and are not included in railway status.
 
 App feedback currently displays `feedback@accessgranted.example`, explicitly labeled as an inactive placeholder. It has no mailto link and collects no messages. The source planning document preserves the teacher’s checklist and historical plan; it is not evidence that real-user testing or presentation submissions have been completed.

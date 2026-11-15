@@ -12,9 +12,12 @@ async function withServer(options, run) {
 }
 const post = (base, body, headers = {}) => fetch(`${base}/api/ask`, { method: 'POST', headers: { 'Content-Type':'application/json', ...headers }, body: JSON.stringify(body) });
 
-test('15 distinct official complexes preserve restricted and non-accessible records', () => {
-  assert.equal(dataset.records.length,15);
-  assert.equal(new Set(dataset.records.map(r=>r.station.stationId)).size,15);
+test('complete MTA directory preserves distinct complexes and restricted/non-accessible records', () => {
+  assert.ok(dataset.records.length>400);
+  assert.equal(dataset.records.length,dataset.sourceCounts.complexes);
+  assert.equal(new Set(dataset.records.map(r=>r.station.stationId)).size,dataset.records.length);
+  assert.equal(new Set(dataset.records.flatMap(r=>r.platforms.map(p=>p.id))).size,dataset.sourceCounts.stations);
+  assert.equal(new Set(dataset.records.flatMap(r=>r.platforms.map(p=>p.stationId))).size,dataset.sourceCounts.stationIds);
   assert.equal(get_station_accessibility({stationId:'427'}).record.adaClassification,'not_accessible');
   assert.equal(get_station_accessibility({stationId:'151'}).record.adaClassification,'not_accessible');
   const court = get_station_accessibility({stationId:'606'}).record;
@@ -27,9 +30,12 @@ test('15 distinct official complexes preserve restricted and non-accessible reco
 test('search handles service, alias, borough and empty results without inventing stations',()=>{
   assert.ok(search_stations({query:'7'}).matches.some(s=>s.stationId==='471'));
   assert.equal(search_stations({query:'149 Grand Concourse'}).matches[0].stationId,'603');
-  assert.equal(search_stations({query:'',borough:'Queens'}).matches.length,3);
-  assert.deepEqual(new Set(search_stations({query:'',borough:'Staten Island'}).matches.map(r=>r.stationId)),new Set(['501','510','522']));
-  assert.equal(get_station_accessibility({stationId:'522'}).record.entrances[0].locationDescription,'Ramp on the south side of the station.');
+  assert.ok(search_stations({query:'',borough:'Queens'}).matches.length>70);
+  const sir=search_stations({query:'',borough:'Staten Island'}).matches;
+  assert.equal(sir.length,21);
+  assert.ok(sir.some(r=>r.stationName==='Arthur Kill'));
+  assert.match(get_station_accessibility({stationId:'522'}).record.entrances[0].locationDescription,/Ramp (?:at|on)(?: the)? south side/i);
+  assert.ok(search_stations({query:'168 Washington'}).matches.some(r=>r.stationId==='605'));
   assert.equal(search_stations({query:'doesnotexist'}).matches.length,0);
   assert.throws(()=>get_station_accessibility({stationId:'../../.env'}),{code:'unknown_station'});
 });
@@ -57,7 +63,7 @@ test('guide uses server evidence, validates output and limits confirmations',asy
 });
 
 test('station API and health work without a key; question fails clearly without affecting cards',()=>withServer({keyConfigured:()=>false},async base=>{
-  const health=await (await fetch(`${base}/api/health`)).json();assert.equal(health.aiConfigured,false);assert.equal(health.stationCount,15);
+  const health=await (await fetch(`${base}/api/health`)).json();assert.equal(health.aiConfigured,false);assert.equal(health.stationCount,dataset.records.length);
   const response=await post(base,{stationId:'471',question:'Which entrance?'});assert.equal(response.status,503);
   assert.equal((await fetch(`${base}/api/stations/471`)).status,200);
   assert.equal((await fetch(`${base}/api/stations/missing`)).status,404);

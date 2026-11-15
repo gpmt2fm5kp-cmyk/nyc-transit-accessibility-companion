@@ -12,5 +12,7 @@ for (const record of dataset.records) for (const platform of record.platforms) {
   const flags = [source.ada_northbound, source.ada_southbound].map(flag => ({ '0':'no','1':'yes' }[flag] || 'unknown'));
   if (flags.some((flag,index) => flag !== platform.directions[index].stepFree)) changes.push(`${platform.id}: direction flags changed; manual review needed`);
 }
-console.log(changes.length ? changes.join('\n') : 'No accessibility or service-list differences found in pilot platform records. Entrance references still require manual review.');
+const loadedIds = new Set(dataset.records.flatMap(r=>r.platforms.map(p=>p.id)));
+for(const source of latest) if(!loadedIds.has(source.gtfs_stop_id))changes.push(`${source.gtfs_stop_id}: new MTA record; run the station importer and review changes`);
+console.log(changes.length ? changes.join('\n') : 'No accessibility or service-list differences found across loaded station records. Entrance references still require review.');
 console.log('No files changed. This does not refresh or verify the saved snapshot.');

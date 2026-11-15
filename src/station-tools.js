@@ -21,7 +21,7 @@ export function search_stations(input) {
 export function get_station_accessibility(input) {
   const { stationId } = stationInput.parse(input);
   const record = dataset.records.find(item => item.station.stationId === stationId);
-  if (!record) { const error = new Error('This station is outside the pilot. Choose one of the listed stations.'); error.status = 404; error.code = 'unknown_station'; throw error; }
+  if (!record) { const error = new Error('This station was not found in the MTA reference. Choose one of the listed stations.'); error.status = 404; error.code = 'unknown_station'; throw error; }
   return { record };
 }
 export const tools = { search_stations, get_station_accessibility };
