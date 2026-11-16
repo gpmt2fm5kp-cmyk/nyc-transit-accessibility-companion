@@ -74,8 +74,9 @@ function renderStations() {
     button.type = 'button';
     button.dataset.stationId = station.stationId;
     button.setAttribute('aria-current', String(state.record?.station.stationId === station.stationId));
-    button.setAttribute('aria-label', `${stationDisplayName(station)}, lines ${station.services.join(', ')}, ${station.borough}. ${classifications[station.classification]}.`);
-    const sub = element('span', undefined, 'station-subline'); sub.append(routes(station.services, 4), element('span', station.borough));
+    const location = [station.borough, station.locationLabel].filter(Boolean).join(' · ');
+    button.setAttribute('aria-label', `${stationDisplayName(station)}, lines ${station.services.join(', ')}, ${location}. ${classifications[station.classification]}.`);
+    const sub = element('span', undefined, 'station-subline'); sub.append(routes(station.services, 4), element('span', location));
     const access = element('span', undefined, 'station-access-status');
     access.append(icon(station.classification==='not_accessible'?'no-access':'wheelchair'), element('span', { fully_accessible: 'Wheelchair-accessible · per MTA', partially_accessible: 'Limited wheelchair access', not_accessible: 'Not wheelchair-accessible · per MTA', unknown: 'Wheelchair access not confirmed' }[station.classification]));
     button.append(element('strong', stationDisplayName(station)), sub, access);
@@ -116,7 +117,7 @@ function renderRecord() {
   const record=state.record;
   $('#station-name').textContent=stationDisplayName(record.station);
   $('#station-routes').replaceChildren(routes(record.station.services));
-  $('#station-borough').textContent=record.station.borough;
+  $('#station-borough').textContent=[record.station.borough,record.station.locationLabel].filter(Boolean).join(' · ');
   $('#staten-island-note').hidden=record.station.borough!=='Staten Island';
   $('#station-access-brief').textContent={fully_accessible:'Wheelchair-accessible — per MTA. Equipment reports are a separate check.',partially_accessible:'Limited wheelchair access — check platforms and directions.',not_accessible:'Not wheelchair-accessible — per MTA.',unknown:'Wheelchair access not confirmed.'}[record.adaClassification];
   $('#access-label').textContent={fully_accessible:'Wheelchair-accessible — per MTA',partially_accessible:'Limited wheelchair access',not_accessible:'Not wheelchair-accessible — per MTA',unknown:'Wheelchair access not confirmed'}[record.adaClassification];

@@ -64,7 +64,7 @@ export function buildStations({stations,complexes,entrances,accessibleHtml,metad
     const classification=complex.ada==='1' && platforms.some(p=>p.classification!=='fully_accessible') ? 'partially_accessible' : classes[complex.ada];
     const restriction=clean(complex.ada_notes);
     return {
-      station:{stationId:id,stationName:complex.stop_name,borough:boroughs[complex.borough],services:list(complex.daytime_routes)},
+      station:{stationId:id,stationName:complex.stop_name,borough:boroughs[complex.borough],services:list(complex.daytime_routes),...(notes[id]?.locationLabel ? {locationLabel:notes[id].locationLabel} : {})},
       aliases:[...new Set([complex.display_name,...rows.map(r=>r.stop_name),...(notes[id]?.aliases||[])])],
       adaClassification:classification,
       directionNotes:[restriction,'Read each service and direction separately. A station listing does not confirm equipment operation.'].filter(Boolean).join(' '),
