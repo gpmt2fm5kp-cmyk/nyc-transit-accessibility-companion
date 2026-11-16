@@ -53,6 +53,8 @@ body{font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;le
 :root:not([data-theme=dark]) .station-button[aria-current=true]{background:linear-gradient(110deg,#fff5ed,#fff 65%);border-color:#e4c3b2;box-shadow:inset 3px 0 0 var(--accent),0 4px 12px #20304706}
 @media(max-width:1050px){:root:not([data-theme=dark]) .feature-card{grid-template-columns:38px 1fr;column-gap:10px}:root:not([data-theme=dark]) .feature-card>span[data-icon]{align-self:center}}
 @media(max-width:760px){:root:not([data-theme=dark]) .feature-card{grid-template-columns:32px 1fr;column-gap:9px;min-height:112px}:root:not([data-theme=dark]) .feature-card>span[data-icon]{width:32px;height:34px;border-radius:9px}:root:not([data-theme=dark]) .feature-card>span[data-icon] .access-icon{width:21px;height:21px}:root:not([data-theme=dark]) .ask-heading{gap:10px}:root:not([data-theme=dark]) .station-heading{padding-bottom:23px}}
+.message a{font-weight:650;text-decoration:underline;text-underline-offset:3px}
+.message a:focus-visible{outline:2px solid currentColor;outline-offset:3px;border-radius:2px}
 /* Brief opening feedback; reduced-motion users see the content immediately. */
 @media(prefers-reduced-motion:no-preference){
  .access-panel:not([hidden]),.coming-soon-panel:not([hidden]){animation:feature-reveal 180ms cubic-bezier(.2,.7,.3,1) both}

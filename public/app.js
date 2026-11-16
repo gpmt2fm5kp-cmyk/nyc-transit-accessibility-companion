@@ -1,3 +1,4 @@
+import { appendAnswerText } from './answer-links.js';
 const $ = selector => document.querySelector(selector);
 const state = { stations: [], record: null, borough: 'All', query: '', history: [], mode: 'snapshot', busy: false, selectVersion: 0, askVersion: 0, aiConfigured: false };
 const classifications = { fully_accessible: 'Listed ADA accessible', partially_accessible: 'Some access is restricted', not_accessible: 'Not listed as ADA accessible', unknown: 'Accessibility not confirmed' };
@@ -225,7 +226,7 @@ async function toggleDemo(){
 }
 $('#demo-toggle').addEventListener('click',toggleDemo);
 $('#exit-demo').addEventListener('click',()=>{state.mode='snapshot';resetConversation();renderMode();});
-function message(role,text,error=false){const box=element('div',undefined,`message ${role}${error?' error':''}`);box.append(element('strong',role==='user'?'Your question':error?'Guide unavailable':'Station guide'),element('p',text));$('#conversation').append(box);return box;}
+function message(role,text,error=false){const box=element('div',undefined,`message ${role}${error?' error':''}`);const content=element('p');if(role==='assistant')appendAnswerText(content,text);else content.textContent=text;box.append(element('strong',role==='user'?'Your question':error?'Guide unavailable':'Station guide'),content);$('#conversation').append(box);return box;}
 $('#ask-form').addEventListener('submit',async event=>{
   event.preventDefault();if(state.busy||!state.record)return;
   const question=$('#question').value.trim();if(!question)return;
@@ -238,7 +239,7 @@ $('#ask-form').addEventListener('submit',async event=>{
     if(version!==state.askVersion)return;
     pending.remove();
     const box=message('assistant',result.answer);
-    box.append(element('p',`Next step: ${result.nextStep}`,'next-step'));
+    box.append(appendAnswerText(element('p',undefined,'next-step'),`Next step: ${result.nextStep}`));
     box.append(element('p',`${result.dataMode==='demonstration'?'Sample outage for demonstration. ':''}${result.canConfirm?'Supported by the dated reference.':'This answer cannot confirm the requested conditions.'} AI answers use station reference data. See the separate elevator update panel for MTA reports.`,'answer-note'));
     state.history.push({role:'user',text:question},{role:'assistant',text:`${result.answer} ${result.nextStep}`});state.history=state.history.slice(-6);
     if(Number.isFinite(result.usage?.totalTokens)){$('#usage').textContent=`${result.usage.totalTokens.toLocaleString()} tokens used for this response`;$('#usage').hidden=false;}
