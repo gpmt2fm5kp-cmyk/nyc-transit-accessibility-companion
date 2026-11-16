@@ -244,7 +244,21 @@ $('#ask-form').addEventListener('submit',async event=>{
     box.append(element('p',`${result.dataMode==='demonstration'?'Sample outage for demonstration. ':''}${result.canConfirm?'Supported by the dated reference.':'This answer cannot confirm the requested conditions.'} AI answers use station reference data. See the separate elevator update panel for MTA reports.`,'answer-note'));
     state.history.push({role:'user',text:question},{role:'assistant',text:`${result.answer} ${result.nextStep}`});state.history=state.history.slice(-6);
     if(Number.isFinite(result.usage?.totalTokens)){$('#usage').textContent=`${result.usage.totalTokens.toLocaleString()} tokens used for this response`;$('#usage').hidden=false;}
-  }catch(error){if(version!==state.askVersion)return;pending.remove();message('assistant',error.message,true);}
+  }catch(error){
+    if(version!==state.askVersion)return;
+    pending.remove();
+    const box=message('assistant',error.message,true);
+    const retry=element('button','Try again','secondary');retry.type='button';
+    retry.addEventListener('click',()=>{if(state.busy || state.record?.station.stationId!==stationId)return;$('#question').value=question;$('#ask-form').requestSubmit();});
+    const platforms=element('button','View platform information','secondary');platforms.type='button';
+    platforms.addEventListener('click',()=>{
+      if(state.record?.station.stationId!==stationId)return;
+      if($('[data-feature="step-free"]').getAttribute('aria-expanded')!=='true')selectFeature('step-free');
+      $('#more-details').open=true;
+      const heading=$('#quick-platform-title');heading.tabIndex=-1;heading.focus({preventScroll:true});heading.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'center'});
+    });
+    const actions=element('div',undefined,'answer-recovery');actions.append(retry,platforms);box.append(actions);
+  }
   finally{if(version===state.askVersion){state.busy=false;$('#ask-submit').disabled=false;$('#ask-submit').textContent='Ask';$('#question').focus({preventScroll:true});$('#conversation').scrollTop=$('#conversation').scrollHeight;}}
 });
 for(const chip of document.querySelectorAll('[data-question]'))chip.addEventListener('click',()=>{$('#question').value=chip.dataset.question;$('#question').focus();});

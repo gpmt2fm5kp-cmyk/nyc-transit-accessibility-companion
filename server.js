@@ -67,6 +67,7 @@ export function createApp({ answer = askGuide, keyConfigured = () => Boolean(pro
         else if (status === 400) { code = 'ai_request'; }
         else if (error instanceof ZodError || error instanceof SyntaxError) { code = 'ai_response'; }
         else if (/abort|timed? ?out|timeout/i.test(raw)) { code = 'ai_timeout'; }
+        if (code === 'ai_timeout') message = 'The AI is taking too long. Try again, or open Wheelchair access to view platform information.';
         console.warn('Gemini request failed', { code, providerStatus: status || null });
         res.status(502).json({ error: code, message });
       }

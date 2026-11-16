@@ -83,6 +83,19 @@ test('provider failure is friendly and cannot expose raw secret-bearing errors',
   assert.equal(response.status,502);assert.doesNotMatch(await response.text(),/secret-do-not-return/);
 }));
 
+test('provider timeouts give recovery instructions and leave station data available',async()=>{
+  for(const failure of [Object.assign(new Error('provider unavailable'),{status:504}),new Error('request timed out secret-do-not-return')]){
+    await withServer({keyConfigured:()=>true,answer:()=>{throw failure;}},async base=>{
+      const response=await post(base,{stationId:'471',question:'Which platforms?'});
+      assert.equal(response.status,502);
+      const body=await response.json();assert.equal(body.error,'ai_timeout');
+      assert.match(body.message,/taking too long.*Wheelchair access.*platform information/);
+      assert.doesNotMatch(body.message,/secret-do-not-return/);
+      assert.equal((await fetch(`${base}/api/stations/471`)).status,200);
+    });
+  }
+});
+
 test('working provider path returns an answer and guards rapid repeated usage',()=>withServer({keyConfigured:()=>true,answer:async body=>({answer:'A sourced answer.',canConfirm:false,nextStep:'Check MTA.',stationId:body.stationId})},async base=>{
   for(let i=0;i<8;i++)assert.equal((await post(base,{stationId:'471',question:'Which entrance?'})).status,200);
   assert.equal((await post(base,{stationId:'471',question:'Which entrance?'})).status,429);
